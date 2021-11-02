@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+    <link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
+    <title>Configuración</title>
+    <link rel="stylesheet" href="css/Configuracion.css">
+</head>
+
+<body>
+
+    <div class="background">
+
+        <h1>Configuración</h1>
+        <div class="logo">
+
+            <img src="img/Configuracion.png" width="900px" height="600px" style="mix-blend-mode:multiply;">
+
+        </div>
+        <div class="valores">
+
+            <h2>Audio</h2>
+            <input type="range" min="0" max="100" id="musicV" onchange="VolumenMusica(this.value)">
+            <br>
+            <h2>Sonido</h2>
+            <input type="range" min="0" max="100" id="soundV" onchange="VolumenSonido(this.value)">
+            <h2>Dificultad</h2>
+            <br>
+            <div class="radio">
+                <input label="Fácil" type="radio" id="Fácil" name="dificultad" value="Facil" checked>
+                <input label="Difícil" type="radio" id="Difícil" name="dificultad" value="Dificil">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="botones"  onmouseover="sound()">
+            <button id="btn_Salir" >Salir</button>
+        </div>
+
+
+
+    </div>
+    <audio id="Audio" autoplay>
+
+        <source src="music/prueba.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="Audio2" autoplay>
+
+        <source src="music/btn_sound.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="Audio3" autoplay>
+
+        <source src="music/btn_click.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="js/Configuracion.js"></script>
+
+</body>
+
+</html>

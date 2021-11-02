@@ -1,0 +1,1109 @@
+<html>
+
+<head>
+	<title>Nivel 2</title>
+	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
+	<link rel="stylesheet" href="css/Juego.css">
+	<link rel="stylesheet" href="css/Pausa.css">
+	
+	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/libs/three/three.js"></script>
+	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
+	<script type="text/javascript">
+
+		var scene;
+		var camera;
+		var renderer;
+		var clock;
+		var controls;
+		var gravityAff = [];
+		var keys = {};
+		var rayCaster;
+		var Collisions = [];
+		var CollisionsBox = [];
+		var rayDown = new THREE.Vector3(0, -1, 0);
+		var rayUp = new THREE.Vector3(0, 1, 0);
+		var rayLeft = new THREE.Vector3(-1, 0, 0);
+		var rayRigth = new THREE.Vector3(1, 0, 0);
+		var gravity = 4;
+		var jumpLength = 70;
+		var jumpStrength = 14;
+		var direccioncubo1;
+		var direccioncubo2;
+		var direccioncubo3;
+		var direccioncubo4;
+		var isWorldReady = [false, false, false, false, false, false, false];
+		var nPlayers = 1;
+		var players = [];
+
+		$(document).ready(function () {
+
+			//MODELOS--------------------------------------------------
+			loadOBJWithMTL("assets/", "cubo.obj", "cubo.mtl", (object) => {
+
+				//ORILLA IZQUIERDA
+				object.position.x = -13;
+				object.position.y = 8;
+				object.box = new THREE.BoundingBoxHelper(object, 0x00ffff);
+				object.box.update();
+				Collisions.push(object);
+				CollisionsBox.push(object.box);
+
+				var box2 = object.clone();
+				box2.position.x = -12;
+				box2.position.y = 8;
+				box2.box = new THREE.BoundingBoxHelper(box2, 0x00ffff);
+				box2.box.update();
+				Collisions.push(box2);
+				CollisionsBox.push(box2.box);
+
+				var box3 = object.clone();
+				box3.position.x = -11;
+				box3.position.y = 8;
+				box3.box = new THREE.BoundingBoxHelper(box3, 0x00ffff);
+				box3.box.update();
+				Collisions.push(box3);
+				CollisionsBox.push(box3.box);
+
+				var box4 = object.clone();
+				box4.position.x = -10;
+				box4.position.y = -2;
+				box4.box = new THREE.BoundingBoxHelper(box4, 0x00ffff);
+				box4.box.update();
+				Collisions.push(box4);
+				CollisionsBox.push(box4.box);
+
+
+				var box5 = object.clone();
+				box5.position.x = -9;
+				box5.position.y = -2;
+				box5.box = new THREE.BoundingBoxHelper(box5, 0x00ffff);
+				box5.box.update();
+				Collisions.push(box5);
+				CollisionsBox.push(box5.box);
+
+				var box6 = object.clone();
+				box6.position.x = -8;
+				box6.position.y = -2;
+				box6.box = new THREE.BoundingBoxHelper(box6, 0x00ffff);
+				box6.box.update();
+				Collisions.push(box6);
+				CollisionsBox.push(box6.box);
+
+				//ORILLA DERECHA
+				var box7 = object.clone();
+				box7.position.x = 12;
+				box7.position.y = 8;
+				box7.box = new THREE.BoundingBoxHelper(box7, 0x00ffff);
+				box7.box.update();
+				Collisions.push(box7);
+				CollisionsBox.push(box7.box);
+
+
+				var box8 = object.clone();
+				box8.position.x = 11;
+				box8.position.y = 8;
+				box8.box = new THREE.BoundingBoxHelper(box8, 0x00ffff);
+				box8.box.update();
+				Collisions.push(box8);
+				CollisionsBox.push(box8.box);
+
+				var box9 = object.clone();
+				box9.position.x = 10;
+				box9.position.y = 8;
+				box9.box = new THREE.BoundingBoxHelper(box9, 0x00ffff);
+				box9.box.update();
+				Collisions.push(box9);
+				CollisionsBox.push(box9.box);
+
+				var box10 = object.clone();
+				box10.position.x = 9;
+				box10.position.y = -2;
+				box10.box = new THREE.BoundingBoxHelper(box10, 0x00ffff);
+				box10.box.update();
+				Collisions.push(box10);
+				CollisionsBox.push(box10.box);
+
+				var box11 = object.clone();
+				box11.position.x = 8;
+				box11.position.y = -2;
+				box11.box = new THREE.BoundingBoxHelper(box11, 0x00ffff);
+				box11.box.update();
+				Collisions.push(box11);
+				CollisionsBox.push(box11.box);
+
+				var box12 = object.clone();
+				box12.position.x = 7;
+				box12.position.y = -2;
+				box12.box = new THREE.BoundingBoxHelper(box12, 0x00ffff);
+				box12.box.update();
+				Collisions.push(box12);
+				CollisionsBox.push(box12.box);
+
+				//EN MEDIO
+
+				var box13 = object.clone();
+				box13.position.x = 0;
+				box13.position.y = -2;
+				box13.scale.set(5, 1, 1);
+				box13.box = new THREE.BoundingBoxHelper(box13, 0x00ffff);
+				box13.box.update();
+				Collisions.push(box13);
+				CollisionsBox.push(box13.box);
+				box13.name = "PlatCentro";
+				//PLATAFORMA IZQUIERDA 
+				var box14 = object.clone();
+				box14.position.x = 0;
+				box14.position.y = 8;
+				box14.box = new THREE.BoundingBoxHelper(box14, 0x00ffff);
+				box14.box.update();
+				Collisions.push(box14);
+				box14.scale.set(5, 1, 1);
+				CollisionsBox.push(box14.box);
+				box14.name = "PlatCentroArriba";
+
+				//ARRIBA ARRIBA IZQUIERDA
+				var box15 = object.clone();
+				box15.position.x = -9;
+				box15.position.y = 14;
+				box15.box = new THREE.BoundingBoxHelper(box15, 0x00ffff);
+				box15.box.update();
+				Collisions.push(box15);
+				CollisionsBox.push(box15.box);
+
+				var box16 = object.clone();
+				box16.position.x = -9.9;
+				box16.position.y = 14;
+				box16.box = new THREE.BoundingBoxHelper(box16, 0x00ffff);
+				box16.box.update();
+				Collisions.push(box16);
+				CollisionsBox.push(box16.box);
+
+
+				var box17 = object.clone();
+				box17.position.x = -10.9;
+				box17.position.y = 14;
+				box17.box = new THREE.BoundingBoxHelper(box17, 0x00ffff);
+				box17.box.update();
+				Collisions.push(box17);
+				CollisionsBox.push(box17.box);
+
+				//PLATAFORMA DERECHA 
+				var box18 = object.clone();
+				box18.position.x = 7;
+				box18.position.y = 7;
+				box18.scale.set(5, 1, 1);
+				box18.box = new THREE.BoundingBoxHelper(box18, 0x00ffff);
+				box18.box.update();
+				Collisions.push(box18);
+				CollisionsBox.push(box18.box);
+				box18.name = "PD";
+
+				//PLATAFORMA IZQUIERDA 
+				var box19 = object.clone();
+				box19.position.x = -15;
+				box19.position.y = 7;
+				box19.scale.set(5, 1, 1);
+				box19.box = new THREE.BoundingBoxHelper(box19, 0x00ffff);
+				box19.box.update();
+				Collisions.push(box19);
+				CollisionsBox.push(box19.box);
+				box19.name = "PI";
+
+				//ARRIBA ARRIBA DERECHA
+				var box20 = object.clone();
+				box20.position.x = 9;
+				box20.position.y = 14;
+				box20.box = new THREE.BoundingBoxHelper(box20, 0x00ffff);
+				box20.box.update();
+				Collisions.push(box20);
+				CollisionsBox.push(box20.box);
+
+				var box21 = object.clone();
+				box21.position.x = 9.9;
+				box21.position.y = 14;
+				box21.box = new THREE.BoundingBoxHelper(box21, 0x00ffff);
+				box21.box.update();
+				Collisions.push(box21);
+				CollisionsBox.push(box21.box);
+
+				var box22 = object.clone();
+				box22.position.x = 10.9;
+				box22.position.y = 14;
+				box22.box = new THREE.BoundingBoxHelper(box22, 0x00ffff);
+				box22.box.update();
+				Collisions.push(box22);
+				CollisionsBox.push(box22.box);
+
+				//FINAL 
+				var box23 = object.clone();
+				box23.position.x = 5;
+				box23.position.y = 18;
+				box23.scale.set(10, 1, 1);
+				box23.box = new THREE.BoundingBoxHelper(box23, 0x00ffff);
+				box23.box.update();
+				Collisions.push(box23);
+				CollisionsBox.push(box23.box);
+
+
+
+				scene.add(object);
+				scene.add(box2);
+				scene.add(box3);
+				scene.add(box4);
+				scene.add(box5);
+				scene.add(box6);
+				scene.add(box7);
+				scene.add(box8);
+				scene.add(box9);
+				scene.add(box10);
+				scene.add(box11);
+				scene.add(box12);
+				scene.add(box13);
+				scene.add(box14);
+				scene.add(box15);
+				scene.add(box16);
+				scene.add(box17);
+				scene.add(box18);
+				scene.add(box19);
+				scene.add(box20);
+				scene.add(box21);
+				scene.add(box22);
+				scene.add(box23);
+
+
+				Collisions.push(object);
+				isWorldReady[0] = true;
+			});
+
+			//PLAYER
+			loadOBJWithMTL("assets/", "hamsterPoseBase.obj", "hamsterPoseBase.mtl", (player) => {
+				player.position.x = -5;
+				player.position.y = -3;
+				player.scale.set(0.4, 0.4, 0.4);
+				player.rotation.y = THREE.Math.degToRad(90);
+
+				player.name = "player";
+				player.jump = jumpLength;
+				player.canJump = true;
+				player.box = new THREE.Box3();
+				player.box.setFromObject(player);
+				gravityAff.push(player);
+				player.isFalling = false;
+				player.isJumping = false;
+				player.isWalking = false;
+				player.fall = 0;
+				player.dir = 0;
+				player.visible = true;
+				player.poses = [];
+				player.frames = 0;
+				players.push(player)
+
+				scene.add(player);
+				scene.add(player.box);
+				//Cargar las poses cuando ya este cargado el player
+				loadOBJWithMTL("assets/", "hamsterpose2.obj", "hamsterpose2.mtl", (player1pose) => {
+
+					player1pose.position.x = -5;
+					player1pose.position.y = -3;
+					player1pose.scale.set(0.4, 0.4, 0.4);
+					player1pose.rotation.y = THREE.Math.degToRad(90);
+					player.poses.push(player1pose)
+					player.poses[0].visible = true;
+
+					scene.add(player.poses[0]);
+					loadOBJWithMTL("assets/", "hamsterpose3.obj", "hamsterpose3.mtl", (player1pose2) => {
+
+						player1pose2.position.x = -5;
+						player1pose2.position.y = -3;
+						player1pose2.scale.set(0.4, 0.4, 0.4);
+						player1pose2.rotation.y = THREE.Math.degToRad(90);
+						player.poses.push(player1pose2)
+						player.poses[1].visible = true;
+
+						scene.add(player.poses[1]);
+						isWorldReady[1] = true;
+					});
+				});
+				//Poses cargadas
+
+				if (nPlayers == 2) {
+					document.getElementById("jugador2").style.display = 'block';
+					loadOBJWithMTL("assets/", "hamsterAzul.obj", "hamsterAzul.mtl", (player2) => {
+
+
+						player2.position.x = -5;
+						player2.position.y = -3;
+						player2.scale.set(0.4, 0.4, 0.4);
+						player2.rotation.y = THREE.Math.degToRad(90);
+
+						player2.name = "player2";
+						player2.jump = jumpLength;
+						player2.canJump = true;
+						player2.box = new THREE.Box3();
+						player2.box.setFromObject(player2);
+						gravityAff.push(player2);
+						player2.isFalling = false;
+						player2.isJumping = false;
+						player2.poses = [];
+						player2.frames = 0;
+						player2.fall = 0;
+						player2.dir = 0;
+
+						players.push(player2)
+
+						scene.add(player2);
+
+						loadOBJWithMTL("assets/", "hamsterpose2.obj", "hamster2pose2.mtl", (player2pose) => {
+
+							player2pose.position.x = 0;
+							player2pose.position.y = 0;
+							player2pose.scale.set(0.4, 0.4, 0.4);
+							player2pose.rotation.y = THREE.Math.degToRad(90);
+							player2.poses.push(player2pose)
+							player2.poses[0].visible = false;
+
+							scene.add(player2.poses[0]);
+							loadOBJWithMTL("assets/", "hamsterpose3.obj", "hamster2pose3.mtl", (player2pose2) => {
+
+								player2pose2.position.x = 0;
+								player2pose2.position.y = 0;
+								player2pose2.scale.set(0.4, 0.4, 0.4);
+								player2pose2.rotation.y = THREE.Math.degToRad(90);
+								player2.poses.push(player2pose2)
+								player2.poses[1].visible = false;
+
+								scene.add(player2.poses[1]);
+								isWorldReady[2] = true;
+							});
+						});
+
+					});
+				}
+				else {
+					isWorldReady[2] = true;
+				}
+			});
+			//---------------------------------------------------------		
+			//FONDO
+			loadOBJWithMTL("assets/", "Fondo2.obj", "Fondo2.mtl", (fondo) => {
+
+
+				fondo.position.x = 0;
+				fondo.position.y = -15;
+				fondo.position.z = -1;
+				fondo.scale.set(1, 1.8, 1);
+
+
+
+				fondo.name = "fondo";
+
+
+				scene.add(fondo);
+
+
+				isWorldReady[3] = true;
+			});
+
+			//LAGARTO
+			loadOBJWithMTL("assets/", "LagartoBase.obj", "LagartoBase.mtl", (Lizardon) => {
+				//PARED IZQUIERDA
+				Lizardon.position.x = 8;
+				Lizardon.position.y = 18.5;
+				Lizardon.scale.set(0.2, 0.3, 0.3);
+				Lizardon.rotation.y = THREE.Math.degToRad(-90);
+				scene.add(Lizardon);
+
+
+				isWorldReady[5] = true;
+			});
+
+			//PELUSAS
+			loadOBJWithMTL("assets/", "PelusasBase.obj", "PelusasBase.mtl", (pelusa) => {
+				//PELUSA IZQUIERDA
+				pelusa.position.x = -15;
+				pelusa.position.y = 0;
+				pelusa.scale.set(0.4, 0.4, 0.4);
+				pelusa.rotation.y = THREE.Math.degToRad(90);
+
+				//PELUSA DERECHA
+				var pelusaDer = pelusa.clone();
+				pelusaDer.position.x = 15;
+				pelusaDer.position.y = 0;
+				pelusaDer.rotation.y = THREE.Math.degToRad(-90);
+
+				//PELUSA ARRIBA
+				var pelusaArriba = pelusa.clone();
+				pelusaArriba.position.x = 0;
+				pelusaArriba.position.y = 25;
+				pelusaArriba.rotation.y = THREE.Math.degToRad(0);
+				pelusaArriba.rotation.x = THREE.Math.degToRad(30);
+
+				//PELUSA ARRIBA IZQUIERDA
+				var pelusaAIzq = pelusa.clone();
+				pelusaAIzq.position.x = -15;
+				pelusaAIzq.position.y = 10;
+				pelusaAIzq.rotation.y = THREE.Math.degToRad(90);
+				pelusaAIzq.rotation.x = THREE.Math.degToRad(40);
+
+				//PELUSA ARRIBA DERECHA
+				var pelusaADer = pelusa.clone();
+				pelusaADer.position.x = 15;
+				pelusaADer.position.y = 10;
+				pelusaADer.rotation.y = THREE.Math.degToRad(-90);
+
+
+				//PELUSA AARIBA ARRIBA IZQUIERDA
+				var pelusaAIzq2 = pelusa.clone();
+				pelusaAIzq2.position.x = -15;
+				pelusaAIzq2.position.y = 15;
+				pelusaAIzq2.rotation.y = THREE.Math.degToRad(90);
+
+
+
+
+				scene.add(pelusa);
+				scene.add(pelusaDer);
+				scene.add(pelusaArriba);
+				scene.add(pelusaAIzq);
+				scene.add(pelusaADer);
+				scene.add(pelusaAIzq2);
+
+				isWorldReady[6] = true;
+			});
+
+			//PAREDES
+			loadOBJWithMTL("assets/", "Pared2.obj", "Pared2.mtl", (pared) => {
+				//PARED IZQUIERDA
+	
+				pared.position.z = -2;
+				pared.box = new THREE.BoundingBoxHelper(pared, 0x00ffff);
+				pared.box.update();
+				Collisions.push(pared);
+				CollisionsBox.push(pared.box);
+
+				var paredIzq = pared.clone();
+				paredIzq.position.x = -21.3;
+				paredIzq.position.y = 17.3;
+				paredIzq.position.z =1.9;	
+				paredIzq.rotation.x = THREE.Math.degToRad(90);
+				paredIzq.rotation.z = THREE.Math.degToRad(90);
+				paredIzq.box = new THREE.BoundingBoxHelper(paredIzq, 0x00ffff);
+				paredIzq.box.update();
+				Collisions.push(paredIzq);
+				CollisionsBox.push(paredIzq.box);
+
+				
+				//PARED DERECHA
+
+				var paredDer = pared.clone();
+				paredDer.position.x = 21.3;
+				paredDer.position.y = 17.3;
+				paredDer.position.z =1.9;
+				paredDer.rotation.x = THREE.Math.degToRad(90);
+				paredDer.rotation.z = THREE.Math.degToRad(90);
+				paredDer.box = new THREE.BoundingBoxHelper(paredDer, 0x00ffff);
+				paredDer.box.update();
+				Collisions.push(paredDer);
+				CollisionsBox.push(paredDer.box);
+
+				//PISO
+
+				var piso = pared.clone();
+				piso.position.x = 0;
+				piso.position.y = -5;	
+				piso.rotation.y = THREE.Math.degToRad(90);
+				piso.box = new THREE.BoundingBoxHelper(piso, 0x00ffff);
+				piso.box.update();
+				Collisions.push(piso);
+				CollisionsBox.push(piso.box);
+
+				scene.add(paredIzq);
+				scene.add(paredDer);
+				scene.add(piso);
+			
+
+				isWorldReady[4] = true;
+			});
+
+
+
+			clock = new THREE.Clock();
+			rayCaster = new THREE.Raycaster();
+
+			var visibleSize = { width: window.innerWidth, height: window.innerHeight };
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
+
+			renderer = new THREE.WebGLRenderer({ precision: "mediump" });
+			renderer.setClearColor(new THREE.Color(0, 0, 0));
+			renderer.setPixelRatio(visibleSize.width / visibleSize.height);
+			renderer.setSize(visibleSize.width, visibleSize.height);
+
+			var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 0.8);
+			scene.add(ambientLight);
+
+			var directionalLight = new THREE.DirectionalLight(new THREE.Color(.3, .1, .3), 0.4);
+			directionalLight.position.set(0.4, 0, 1);
+			var directionalLight2 = directionalLight.clone();
+			directionalLight2.position.set(-0.4, 0, 1);
+			scene.add(directionalLight);
+			scene.add(directionalLight2);
+
+			var geometria = new THREE.BoxGeometry(30, 1, 1);
+			var material = new THREE.MeshLambertMaterial({
+				color: new THREE.Color(0.7, 0, 0)
+			});
+
+			var geometria2 = new THREE.BoxGeometry(1, 5, 1);
+			var material2 = new THREE.MeshLambertMaterial({
+				color: new THREE.Color(0.7, 0, 7, 0)
+			});
+
+			var geometriaP = new THREE.BoxGeometry(1, 1, 1);
+			var material = new THREE.MeshLambertMaterial({
+				color: new THREE.Color(0.7, 0, 0)
+			});
+
+
+
+
+			//un hijo (con el add) solo puede tener un padre
+
+			camera.position.z = 7;
+
+
+
+			//scene.add(player);
+
+			$("#scene-section").append(renderer.domElement);
+			render();
+
+			document.addEventListener('keydown', onKeyDown);
+			document.addEventListener('keyup', onKeyUp);
+		});
+
+		var deltaTime = 0;
+		var velocidad = 10;
+
+		function render() {
+			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4] && isWorldReady[5] && isWorldReady[6]) {
+				deltaTime = clock.getDelta();
+				var forward = 0;
+				var forward2 = 0;
+				var player = scene.getObjectByName("player");
+				player.box.setFromObject(player);
+
+				if (nPlayers == 2) {
+					document.getElementById("jugador2").style.display = 'block';
+					var player2 = scene.getObjectByName("player2");
+					player2.box.setFromObject(player2);
+				}
+
+				for (var j = 0; j < players.length; j++) {
+					for (var i = 0; i < CollisionsBox.length; i++) {
+						if (players[j].box.intersectsBox(CollisionsBox[i].box)) {
+							if (Math.abs(players[j].box.min.x - CollisionsBox[i].box.max.x) <= 0.5) {
+								players[j].position.x = CollisionsBox[i].box.max.x + 1.3;
+								break;
+							}
+							else {
+								if (Math.abs(players[j].box.max.x - CollisionsBox[i].box.min.x) <= 0.5) {
+									players[j].position.x = CollisionsBox[i].box.min.x - 1.3;
+									break;
+								}
+							}
+						}
+					}
+				}
+				if(Pausa == false){
+				if (keys["A"]) {
+					player.rotation.y = THREE.Math.degToRad(-90);
+					for (var i = 0; i < CollisionsBox.length; i++) {
+						if ((player.box.min.y > CollisionsBox[i].box.min.y && player.box.min.y < CollisionsBox[i].box.max.y) || (player.box.max.y > CollisionsBox[i].box.min.y && player.box.max.y < CollisionsBox[i].box.max.y)) {
+							if (Math.abs(player.box.min.x - CollisionsBox[i].box.max.x) <= 0.2) {
+								forward = 0;
+								break;
+							}
+							else {
+								forward = velocidad;
+								player.isWalking = true;
+							}
+						}
+						else {
+							forward = velocidad;
+							player.isWalking = true;
+						}
+					}
+
+				} else if (keys["D"]) {
+					player.rotation.y = THREE.Math.degToRad(90);
+					for (var i = 0; i < CollisionsBox.length; i++) {
+						if ((player.box.min.y > CollisionsBox[i].box.min.y && player.box.min.y < CollisionsBox[i].box.max.y) || (player.box.max.y > CollisionsBox[i].box.min.y && player.box.max.y < CollisionsBox[i].box.max.y)) {
+							if (Math.abs(player.box.max.x - CollisionsBox[i].box.min.x) <= 0.2) {
+								forward = 0;
+								break;
+							}
+							else {
+								forward = velocidad;
+								player.isWalking = true;
+							}
+
+						}
+						else {
+							forward = velocidad;
+							player.isWalking = true;
+						}
+
+					}
+				}
+
+				if (!keys["A"] && !keys["D"] && player.isJumping == false && player.isFalling == false) {
+					player.isWalking = false;
+					player.frames = 0;
+					player.visible = true;
+					players[0].poses[0].visible = false;
+					players[0].poses[1].visible = false;
+				}
+
+				if (nPlayers == 2) {
+
+					if (keys["J"]) {
+						player2.rotation.y = THREE.Math.degToRad(-90);
+						for (var i = 0; i < CollisionsBox.length; i++) {
+							if ((player2.box.min.y > CollisionsBox[i].box.min.y && player2.box.min.y < CollisionsBox[i].box.max.y) || (player2.box.max.y > CollisionsBox[i].box.min.y && player2.box.max.y < CollisionsBox[i].box.max.y)) {
+								if (Math.abs(player2.box.min.x - CollisionsBox[i].box.max.x) <= 0.2) {
+									forward2 = 0;
+									break;
+								}
+								else {
+									forward2 = velocidad;
+									player2.isWalking = true;
+								}
+							}
+							else {
+								forward2 = velocidad;
+								player2.isWalking = true;
+							}
+						}
+
+					} else if (keys["L"]) {
+						player2.rotation.y = THREE.Math.degToRad(90);
+						for (var i = 0; i < CollisionsBox.length; i++) {
+							if ((player2.box.min.y > CollisionsBox[i].box.min.y && player2.box.min.y < CollisionsBox[i].box.max.y) || (player2.box.max.y > CollisionsBox[i].box.min.y && player2.box.max.y < CollisionsBox[i].box.max.y)) {
+								if (Math.abs(player2.box.max.x - CollisionsBox[i].box.min.x) <= 0.2) {
+									forward2 = 0;
+									break;
+								}
+								else {
+									forward2 = velocidad;
+									player2.isWalking = true;
+								}
+
+							}
+							else {
+								forward2 = velocidad;
+								player2.isWalking = true;
+							}
+
+						}
+					}
+
+					if (!keys["J"] && !keys["L"] && player2.isJumping == false && player2.isFalling == false) {
+						player2.isWalking = false;
+						player2.frames = 0;
+						player2.visible = true;
+						players[1].poses[0].visible = false;
+						players[1].poses[1].visible = false;
+					}
+				}
+
+				if (gravityAff.length > 0) {
+					for (var i = 0; i < gravityAff.length; i++) {
+						if (gravityAff[i].isFalling == true) {
+							gravityAff[i].position.y -= gravity * deltaTime;
+						}
+					}
+				}
+
+				if (gravityAff.length > 0) {
+					for (var i = 0; i < gravityAff.length; i++) {
+						for (var j = 0; CollisionsBox.length > j; j++) {
+							if ((gravityAff[i].box.min.x < CollisionsBox[j].box.max.x && CollisionsBox[j].box.min.x < gravityAff[i].box.min.x) || (gravityAff[i].box.max.x < CollisionsBox[j].box.max.x && CollisionsBox[j].box.min.x < gravityAff[i].box.max.x)) {
+								if (Math.abs(gravityAff[i].box.min.y - CollisionsBox[j].box.max.y) <= 0.1) {
+									gravityAff[i].position.y = CollisionsBox[j].box.max.y + 0.01;
+									gravityAff[i].fall = 0;
+									gravityAff[i].isFalling = false;
+									gravityAff[i].isJumping = false;
+									gravityAff[i].jump = jumpLength;
+									for (var l = 0; l < gravityAff[i].poses.length; l++) {
+										gravityAff[i].poses[l].visible = false;
+									}
+
+									break;
+								}
+								else {
+									gravityAff[i].isFalling = true;
+								}
+							}
+
+						}
+					}
+				}
+
+				if (keys["W"] && player.isFalling == false && player.canJump == true) {
+					player.isJumping = true;
+					player.canJump = false;
+				}
+
+				if (!keys["W"]) {
+					player.canJump = true;
+				}
+
+				if (nPlayers == 2) {
+					if (keys["I"] && player2.isFalling == false && player2.canJump == true) {
+						player2.isJumping = true;
+						player2.canJump = false;
+					}
+
+					if (!keys["I"]) {
+						player2.canJump = true;
+					}
+				}
+
+				for (var j = 0; j < players.length; j++) {
+					if (players[j].isJumping == true && players[j].jump > 0) {
+						var check = false;
+						for (var i = 0; i < CollisionsBox.length; i++) {
+							if ((players[j].box.min.x >= CollisionsBox[i].box.min.x && players[j].box.min.x <= CollisionsBox[i].box.max.x) || (players[j].box.max.x >= CollisionsBox[i].box.min.x && players[j].box.max.x <= CollisionsBox[i].box.max.x)) {
+								if (Math.abs(players[j].box.max.y - CollisionsBox[i].box.min.y) <= 0.1) {
+									check = true;
+
+									break;
+								}
+								else {
+									check = false;
+
+								}
+
+							}
+							else {
+								check = false
+							}
+
+						}
+						if (check == true) {
+							players[j].isJumping = false;
+							players[j].jump = jumpLength;
+							players[j].poses[0].visible = false;
+							players[j].poses[1].visible = false;
+							players[j].visible = true;
+							players[j].frames = 0;
+						}
+						else {
+							players[j].position.y += (jumpStrength - (gravity * (jumpLength - players[j].jump) / 20)) * deltaTime;
+							players[j].jump--;
+						}
+					}
+					else {
+						players[j].isJumping == false;
+					}
+				}
+
+				//PLATAFORMA CENTRO
+				var PlatCenter = scene.getObjectByName("PlatCentro");
+
+				if (PlatCenter.position.y <= -2) {
+					direccioncubo3 = 1;
+				}
+				if (PlatCenter.position.y >= 5) {
+					direccioncubo3 = 0;
+				}
+				if (direccioncubo3 == 0) {
+					PlatCenter.position.y -= 5 * deltaTime;
+					PlatCenter.box.update();
+				}
+				if (direccioncubo3 == 1) {
+					PlatCenter.position.y += 5 * deltaTime;
+					PlatCenter.box.update();
+				}
+
+
+				//PLATAFORMA CENTRO ARRIBA
+				var PlatCenterA = scene.getObjectByName("PlatCentroArriba");
+
+				if (PlatCenterA.position.y <= 8) {
+					direccioncubo4 = 1;
+				}
+				if (PlatCenterA.position.y >= 15) {
+					direccioncubo4 = 0;
+				}
+				if (direccioncubo4 == 0) {
+					PlatCenterA.position.y -= 5 * deltaTime;
+					PlatCenterA.box.update();
+				}
+				if (direccioncubo4 == 1) {
+					PlatCenterA.position.y += 5 * deltaTime;
+					PlatCenterA.box.update();
+				}
+
+
+
+
+				//PLATAFORMA DERECHA
+				var PlatDer = scene.getObjectByName("PD");
+
+				if (PlatDer.position.x <= 7) {
+					direccioncubo2 = 1;
+				}
+				if (PlatDer.position.x >= 15) {
+					direccioncubo2 = 0;
+				}
+				if (direccioncubo2 == 0) {
+					PlatDer.position.x -= 7 * deltaTime;
+					PlatDer.box.update();
+				}
+				if (direccioncubo2 == 1) {
+					PlatDer.position.x += 7 * deltaTime;
+					PlatDer.box.update();
+				}
+
+				//PLATAFORMA IZQUIERDA
+				var PlatIzq = scene.getObjectByName("PI");
+
+				if (PlatIzq.position.x >= -7) {
+					direccioncubo1 = 1;
+				}
+				if (PlatIzq.position.x <= -15) {
+					direccioncubo1 = 0;
+				}
+				if (direccioncubo1 == 0) {
+					PlatIzq.position.x -= -7 * deltaTime;
+					PlatIzq.box.update();
+				}
+				if (direccioncubo1 == 1) {
+					PlatIzq.position.x += -7 * deltaTime;
+					PlatIzq.box.update();
+				}
+
+				if (player.isFalling == false && player.isJumping == false) {
+					player.translateZ(forward * deltaTime);
+				}
+				else {
+					player.translateZ(forward / 1.5 * deltaTime);
+				}
+
+				if (nPlayers == 2) {
+					if (player2.isFalling == false && player2.isJumping == false) {
+						player2.translateZ(forward2 * deltaTime);
+					}
+					else {
+						player2.translateZ(forward2 / 1.5 * deltaTime);
+					}
+				}
+
+				camera.position.x = player.position.x;
+				camera.position.y = player.position.y;
+
+				for (var i = 0; i < players.length; i++) {
+					for (var j = 0; j < players[i].poses.length; j++) {
+						players[i].poses[j].position.x = players[i].position.x;
+						players[i].poses[j].position.y = players[i].position.y;
+						players[i].poses[j].rotation.y = players[i].rotation.y;
+					}
+
+					if (players[i].isWalking == true && players[i].isJumping == false && players[i].isFalling == false) {
+						if (players[i].frames <= 1) {
+							players[i].visible = true;
+							players[i].poses[0].visible = false;
+							players[i].poses[1].visible = false;
+							players[i].frames++;
+						}
+						else {
+							if (players[i].frames > 1 && players[i].frames <= 11) {
+								players[i].visible = false;
+								players[i].poses[0].visible = true;
+								players[i].frames++;
+							}
+							if (players[i].frames > 11 && players[i].frames <= 21) {
+								players[i].poses[0].visible = false;
+								players[i].poses[1].visible = true;
+								players[i].frames++;
+							}
+							else {
+								if (players[i].frames > 21 && players[i].frames <= 31) {
+									players[i].poses[1].visible = false;
+									players[i].poses[0].visible = true;
+									players[i].frames++;
+								}
+								else {
+									if (players[i].frames > 31 && players[i].frames <= 41) {
+										players[i].visible = true;
+										players[i].poses[0].visible = false;
+										players[i].frames++;
+									}
+									else if (players[i].frames > 41) {
+										players[i].frames = 0;
+									}
+								}
+							}
+						}
+					}
+					if (players[i].isFalling || players[i].isJumping) {
+						players[i].visible = false;
+						players[i].poses[0].visible = false;
+						players[i].poses[1].visible = true;
+					}
+				}
+
+			}
+		}
+			requestAnimationFrame(render);
+			renderer.render(scene, camera);
+
+		}
+
+		function onKeyDown(event) {
+			keys[String.fromCharCode(event.keyCode)] = true;
+		}
+		function onKeyUp(event) {
+			keys[String.fromCharCode(event.keyCode)] = false;
+		}
+
+		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
+			var mtlLoader = new THREE.MTLLoader();
+			mtlLoader.setPath(path);
+			mtlLoader.load(mtlFile, (materials) => {
+
+				var objLoader = new THREE.OBJLoader();
+				objLoader.setMaterials(materials);
+				objLoader.setPath(path);
+				objLoader.load(objFile, (object) => {
+					onLoadCallback(object);
+				});
+
+			});
+		}
+
+	</script>
+</head>
+
+<body>
+
+	<div class="time">
+		<h1>Tiempo 00:00:00</h1>
+	</div>
+	<img id="player1icon" src="img/icon.png">
+	<div id="myProgress">
+
+		<div id="myBar"></div>
+
+	</div>
+	<div id="jugador2">
+		<img id="player2icon" src="img/icon.png">
+		<div id="myProgress2">
+
+			<div id="myBar2"></div>
+
+		</div>
+	</div>
+		<!--AUDIO-->
+
+		<audio id="Audio" autoplay loop>
+
+			<source src="music/prueba.mp3" type="audio/mp3">
+			Your browser does not support the audio element.
+		</audio>
+	   
+		<div class="btn2">
+			<div class="botones" id="botonreproducir"  onmouseover="sound()">
+				<button class="" id="btn_Music" onclick="play()">
+				
+					<svg id="Music_icon"xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+						<path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"/>
+						<path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"/>
+						<path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"/>
+					  </svg>
+				</button>
+			</div>
+			<div class="botones" id="botonsilencio"  onmouseover="sound()">
+				<button class="" id="btn_Music2" onclick="play()">
+				
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
+						<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
+					  </svg>
+				</button>
+			</div>
+		</div>
+			<div class="btn">
+			<div class="botones"  onmouseover="sound()">
+				<button id="btn_Pausa" onclick="soundclick()">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+						class="bi bi-pause-circle" viewBox="0 0 16 16">
+						<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+						<path
+							d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z" />
+					</svg>
+	
+	
+				</button>
+			</div>
+	
+			<div class="botones" onmouseover="sound()" >
+				<button class="" id="btn_Salir" onclick="location.href='Principal.html'">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+						class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+						<path fill-rule="evenodd"
+							d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+						<path fill-rule="evenodd"
+							d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+					</svg>
+				</button>
+			</div>
+		
+	
+		</div>
+
+	</div>
+
+
+	<div id="scene-section" />
+
+		<!--MENU PAUSA-->
+
+		<div class="background_pausa" , id="background_pausa">
+			<div class="logo">
+				<img id="hamster" src="img/PausaLogo.png" width="900px" height="600px">
+				<img id="hamster2" src="img/PausaLogo2.png" width="900px" height="600px">
+			</div>
+			<div class="buttons" onmouseover="sound()">
+				<button id="btn_Volver" onclick="soundclick()"> Volver</button>
+			</div>
+	
+			<div class="buttons" onmouseover="sound()">
+				<button class="" id="btn_SalirP" onclick="location.href='Principal.html'"> Salir</button>
+	
+			</div>
+	
+		</div>
+
+		<audio id="Audio2" autoplay>
+
+			<source src="music/btn_sound.mp3" type="audio/mp3">
+			Your browser does not support the audio element.
+		</audio>
+	
+		<audio id="Audio3" autoplay>
+	
+			<source src="music/btn_click.mp3" type="audio/mp3">
+			Your browser does not support the audio element.
+		</audio>
+	
+		<script src="js/Juego.js"></script>
+
+		<script src="js/Audio.js"></script>
+
+</body>
+
+</html>

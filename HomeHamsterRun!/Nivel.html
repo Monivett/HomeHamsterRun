@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Hamster Run!</title>
+    <link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/Nivel.css">
+    <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+
+</head>
+
+<body>
+    <div class="background">
+
+        <div class="niveles">
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1>Selecciona el escenario</h1>
+            <br>
+            <br>
+            <br>
+           
+            <div class="Seleccionar" onmouseover="sound()">
+               
+              
+                <button class="nivel1" id="Nivel1" onclick="location.href='Nivel1.html'"></button>
+                
+                <button class="nivel2" id="Nivel2" onclick="location.href='Nivel2.html'"></button>
+              
+                <button class="nivel3" id="Nivel3" onclick="location.href='Nivel3.html'"></button>
+                <br>
+                <br>
+                <br>
+            </div>
+
+            <div class="botones" onmouseover="sound()">
+                <button class="" id="btn_Multijugador" onclick="location.href='Principal.html'"> Volver</button>
+            </div>
+           
+        </div>
+        <div class="btn_Cerrar" onmouseover="sound()">
+                <button id="btn_Cerrar" onclick="location.href='Login.html'"> Multijugador</button>
+            </div>
+
+    </div>
+    	<!--AUDIO-->
+
+	<audio id="Audio" autoplay loop>
+
+		<source src="music/prueba.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+
+    	<!--SONIDO-->
+	<audio id="Audio2" autoplay>
+
+		<source src="music/btn_sound.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+
+	<audio id="Audio3" autoplay>
+
+		<source src="music/btn_click.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+
+    <script src="js/Audio.js"></script>
+  
+</body>
+
+</html>
