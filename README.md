@@ -1,2 +1,2 @@
 # HomeHamsterRun
-ProyectoFinalGraficas
+Proyecto Final Graficas
