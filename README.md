@@ -1,2 +1,3 @@
 # HomeHamsterRun
-Proyecto Final Graficas
+Proyecto Final Graficas Computacionales Web
+
