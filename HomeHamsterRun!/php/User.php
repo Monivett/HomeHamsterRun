@@ -29,27 +29,44 @@ if ( $_POST['opc'] == 1 ) {
     echo $result;
 }
 
-    //LOGIN
-    if($_POST['opc']==2){
+//LOGIN
+if ( $_POST['opc'] == 2 ) {
 
-        $correo = $_POST['username'];
-        $contrasena = $_POST['contrasena'];
-       
-                $json = [
-            "username"=> $correo,
-            "contrasena"=> $contrasena,
-            ];
-    
-        $pasa = json_encode($json); //Convierte en json
-    
-        $result = $user -> Login($pasa);
-        echo $result;
-    
-     
-        }
+    $correo = $_POST['username'];
+    $contrasena = $_POST['contrasena'];
 
+    $json = [
+        'username'=> $correo,
+        'contrasena'=> $contrasena,
+    ];
 
-        
+    $pasa = json_encode( $json );
+    //Convierte en json
+
+    $result = $user -> Login( $pasa );
+    echo $result;
+
+}
+
+//LOGIN2
+if ( $_POST['opc'] == 4 ) {
+
+    $correo = $_POST['username'];
+    $contrasena = $_POST['contrasena'];
+
+    $json = [
+        'username'=> $correo,
+        'contrasena'=> $contrasena,
+    ];
+
+    $pasa = json_encode( $json );
+    //Convierte en json
+
+    $result = $user -> Login2( $pasa );
+    echo json_encode( $result );
+
+}
+
 //Obtener datos del usuario
 if ( $_POST['opc'] == 3 ) {
 

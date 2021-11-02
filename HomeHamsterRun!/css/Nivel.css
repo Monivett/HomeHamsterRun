@@ -172,12 +172,11 @@ h3{
 
 .btn_Cerrar{
     position: absolute;
-    background-image: url('../img/BotonesSemillas.png');
-    background-repeat:no-repeat;
+  
+ 
     height:70px;
-    width:150px;
-    background-size: 100% 100%;
-    background-position:center;
+
+    
     animation: arriba 1s ease-in forwards ;
     bottom: 0px;
 }
@@ -195,15 +194,47 @@ h3{
 
 }
 
-.btn_Cerrar:hover{
-    height:80px;
-    width:160px;
-}
-#btn_Cerrar:hover{
-    height:80px;
-    width:130px;
-    border: none;
-    background: none;
-}
 
 
+
+#btncerrar2{
+    display: none;
+}
+
+.radio {
+    background: #dbad22;
+	padding: 4px;
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 3px  rgb(204, 118, 6);	
+	position: relative;
+    animation: arribaCuadro 1s ease-in forwards ;
+}
+
+.radio input {
+	width: auto;
+	height: 100%;
+	appearance: none;
+	outline: none;
+	cursor: pointer;
+	border-radius: 2px;
+	padding: 4px 8px;
+	background: #72778f;
+	color: #bdbdbdbd;
+	font-size: 14px;
+	font-family: cursive;
+	transition: all 100ms linear;
+}
+
+.radio input:checked {
+	background-image: linear-gradient(180deg, #dbad22, rgb(204, 118, 6));
+	color: #fff;
+	box-shadow: 0 1px 1px #0000002e;
+	text-shadow: 0 1px 0px #79485f7a;
+}
+
+.radio input:before {
+	content: attr(label);
+	display: inline-block;
+	text-align: center;
+	width: 100%;
+}

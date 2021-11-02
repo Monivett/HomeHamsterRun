@@ -24,14 +24,14 @@
             <br>
             <br>
             <br>
-           
+
             <div class="Seleccionar" onmouseover="sound()">
-               
-              
+
+
                 <button class="nivel1" id="Nivel1" onclick="location.href='Nivel1.html'"></button>
-                
+
                 <button class="nivel2" id="Nivel2" onclick="location.href='Nivel2.html'"></button>
-              
+
                 <button class="nivel3" id="Nivel3" onclick="location.href='Nivel3.html'"></button>
                 <br>
                 <br>
@@ -41,36 +41,47 @@
             <div class="botones" onmouseover="sound()">
                 <button class="" id="btn_Multijugador" onclick="location.href='Principal.html'"> Volver</button>
             </div>
-           
+
         </div>
         <div class="btn_Cerrar" onmouseover="sound()">
-                <button id="btn_Cerrar" onclick="location.href='Login.html'"> Multijugador</button>
+            <div class="radio">
+                <input label="Solitario" type="radio" id="Fácil" name="modo" value="Solitario" checked>
+                <input label="Multijugador" type="radio" id="Difícil" name="modo" value="Multijugador">
+
             </div>
+            <a href="" id="btncerrar2"onclick="CerrarJugador2()">Cerrar Sesion del jugador 2</a>
+        </div>
+
 
     </div>
-    	<!--AUDIO-->
+    <!--AUDIO-->
 
-	<audio id="Audio" autoplay loop>
+    <audio id="Audio" autoplay loop>
 
-		<source src="music/prueba.mp3" type="audio/mp3">
-		Your browser does not support the audio element.
-	</audio>
+        <source src="music/prueba.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
-    	<!--SONIDO-->
-	<audio id="Audio2" autoplay>
+    <!--SONIDO-->
+    <audio id="Audio2" autoplay>
 
-		<source src="music/btn_sound.mp3" type="audio/mp3">
-		Your browser does not support the audio element.
-	</audio>
+        <source src="music/btn_sound.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
-	<audio id="Audio3" autoplay>
+    <audio id="Audio3" autoplay>
 
-		<source src="music/btn_click.mp3" type="audio/mp3">
-		Your browser does not support the audio element.
-	</audio>
+        <source src="music/btn_click.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <script src="js/Audio.js"></script>
-  
+
+    <script src="js/SeleccionNivel.js"></script>
+
+
+
+
 </body>
 
 </html>

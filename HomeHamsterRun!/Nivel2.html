@@ -586,7 +586,7 @@
 
 		var deltaTime = 0;
 		var velocidad = 10;
-
+		var tiempoTotal = 300;
 		function render() {
 			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4] && isWorldReady[5] && isWorldReady[6]) {
 				deltaTime = clock.getDelta();
@@ -618,6 +618,9 @@
 					}
 				}
 				if(Pausa == false){
+					//TIEMPO 
+					tiempoTotal -= deltaTime;
+					$('#tiempo').text("Tiempo restante: " + Math.floor(tiempoTotal));
 				if (keys["A"]) {
 					player.rotation.y = THREE.Math.degToRad(-90);
 					for (var i = 0; i < CollisionsBox.length; i++) {
@@ -992,9 +995,10 @@
 <body>
 
 	<div class="time">
-		<h1>Tiempo 00:00:00</h1>
+		<h1 id="tiempo"></h1>
 	</div>
 	<img id="player1icon" src="img/icon.png">
+	<h2 id="username"></h2>
 	<div id="myProgress">
 
 		<div id="myBar"></div>
@@ -1002,6 +1006,7 @@
 	</div>
 	<div id="jugador2">
 		<img id="player2icon" src="img/icon.png">
+		<h2 id="username2"></h2>
 		<div id="myProgress2">
 
 			<div id="myBar2"></div>
@@ -1012,7 +1017,7 @@
 
 		<audio id="Audio" autoplay loop>
 
-			<source src="music/prueba.mp3" type="audio/mp3">
+			<source src="music/nivel2.mp3" type="audio/mp3">
 			Your browser does not support the audio element.
 		</audio>
 	   

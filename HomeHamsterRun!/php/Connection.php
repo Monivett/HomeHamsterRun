@@ -62,7 +62,7 @@
           $_SESSION["Username"]=$row["Username"];
           $_SESSION["Email"]=$row["Email"];
           $_SESSION["Contraseña"]=$row["Contraseña"];
-          $_SESSION["Tiempo"]=$row["Tiempo"];
+  
           return 1;
         }
         else{

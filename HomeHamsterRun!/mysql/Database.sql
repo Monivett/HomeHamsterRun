@@ -6,7 +6,6 @@ CREATE TABLE `usuario` (
   `Username` varchar(200) DEFAULT NULL unique,
   `Email` varchar(200) UNIQUE DEFAULT NULL ,
   `Contraseña` varchar(200) DEFAULT NULL ,
-  `Tiempo` INT,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
@@ -26,8 +25,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Proc_Usuario`(
 BEGIN
 IF opcion = 'I'
 THEN
-		INSERT INTO Usuario(Username,Email,Contraseña,Tiempo)
-		VALUES (PUsername,PCorreo,PContraseña,1000);
+		INSERT INTO Usuario(Username,Email,Contraseña)
+		VALUES (PUsername,PCorreo,PContraseña);
 END IF;
 IF opcion ='U'
 	THEN
@@ -53,8 +52,7 @@ BEGIN
 		SELECT  ID,
 				Username,						
 				Email,				
-				Contraseña,
-				Tiempo
+				Contraseña
               FROM Usuario
 		WHERE Username = PUser AND Contraseña =PContraseña;
 
@@ -62,4 +60,6 @@ END$$
 DELIMITER ;
 
 CALL `hhr`.`Proc_Login`('Monivett','ajio');
+
+SELECT*FROM Usuario
 

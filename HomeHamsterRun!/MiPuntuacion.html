@@ -10,34 +10,62 @@ Escribir en el navegador: http://localhost/3_facebook/3_facebook/-->
 	<title>3.0 Facebook</title>
 	<link rel="stylesheet" type="text/css" href="css/Creditos.css">
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/libs/three/three.js"></script>
 	<script type="text/javascript" src="js/libs/mifacebook.js"></script>
+
+	<script src="js/libs/canvas2/html2canvas.min.js"></script>
 	<script type="text/javascript">
+
 		function shareFB() {
+			//	html2canvas(document.querySelector("#background")).then(canvas => {
+			//		document.body.appendChild(canvas)
+			//		var link = document.getElementById('background');
+			//		var image = canvas.toDataURL("image/jpeg");
+			//            var url = canvas.toDataURL("image/jpeg");
+			//            image = image.replace('data:image/jpeg;base64,', '');
+			//	//	var image = canvas.toDataURL();
+			//		link.href = image;
+			//		link.download = 'screenshot.png';
+			//		
+			//
+			//	});
 			var score = $("#txtScore").val();
 			shareScore(score);
+
+
 		}
+
+	</script>
+	<script>
+
+
 	</script>
 </head>
 
 <body>
 
 
-    <div class="background">
-        <div class="logo">
-            <img src="img/Logo.png" width="500px" height="200px">
-            <h1>Mi puntuacion es:<p id="txtScore"> 1000</p></h1>
-           
-            <div class="botones">
-                <button class="" id="btn_Multijugador" onclick="shareFB()"> Compartir en Facebook</button>
-            
-            </div>
-            <div class="botones">
-                <button class="" id="btn_Multijugador" onclick="location.href='Principal.html'"> Volver</button>
-              
-            </div>
-        </div>
+	<div class="background" id="background">
+		<div class="logo">
+			<img src="img/Logo.png" width="500px" height="200px">
+			<h1>Mi puntuacion es:<p id="txtScore"> 1000</p>
+			</h1>
 
-    </div>
+			<div class="botones">
+				<button class="" id="btn_Multijugador" onclick="shareFB()"> Compartir en Facebook</button>
+
+			</div>
+			<div class="botones">
+				<button class="" id="btn_Multijugador" onclick="location.href='Principal.html'"> Volver</button>
+
+			</div>
+		</div>
+
+		<div>
+			<a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Mi tiempo es de 	
+			&amp;hashtags=HomeHamsterRun" data-size="large">
+				Compartir en twitter</a>
+		</div>
 </body>
 
 </html>

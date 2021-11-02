@@ -42,29 +42,36 @@ class User extends conexion {
         return $datos;
     }
 
+    public function Login2 ( $json ) {
+
+        $datos = json_decode( $json, true );
+
+        $username = $datos['username'];
+        $contrasena = $datos['contrasena'];
+
+        $query = "Call Proc_Login( '$username','$contrasena');";
+        $datos = parent::obtenerDatos( $query );
+        //Si se agrego
+
+        return $datos;
+    }
+
     public function getPerfilUsuario() {
         header( 'Content-Type: application/json' );
         if ( isset( $_SESSION['ID'] ) ) {
+
+
             $ID = $_SESSION['ID'];
-            $nombre = $_SESSION['Nombre'];
-            $genero = $_SESSION['Género'];
-            $fechaNac = $_SESSION['FechaNacimiento'];
-            $correo = $_SESSION['Email'];
-            $password = $_SESSION['Contraseña'];
-            $fechaRegistro = $_SESSION['FechaRegistro'];
-            $fechaMod = $_SESSION['FechaMod'];
-            $rol = $_SESSION['Rol'];
+            $Username = $_SESSION['Username'];
+            $Email = $_SESSION['Email'];
+            $Contraseña = $_SESSION['Contraseña'];
+   
 
             $json = [
                 'ID' => $ID,
-                'Nombre' => $nombre,
-                'Género'=> $genero,
-                'FechaNacimiento'=> $fechaNac,
-                'Email'=> $correo,
-                'Contraseña'=> $password, //Esto es ilegal eh
-                'FechaRegistro'=> $fechaRegistro,
-                'FechaMod'=> $fechaMod,
-                'Rol'=> $rol
+                'Username' => $Username,
+                'Email'=> $Email,
+                'Contraseña'=> $Contraseña
 
             ];
             return $json;
