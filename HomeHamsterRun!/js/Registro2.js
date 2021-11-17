@@ -30,7 +30,7 @@ formularioRegistro.addEventListener("submit", e => {
 
 
                 }
-                if(data=="Duplicate entry '"+nombre+"' for key 'Username'"){
+                else if (data=="Duplicate entry '"+nombre+"' for key 'Username'"){
                     alert("Error: Ya existe este usuario");
                 }
                 else  {

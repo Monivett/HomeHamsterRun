@@ -16,20 +16,20 @@
     <div class="background">
         <div class="logo">
             <img src="img/Logo.png" width="600px" height="300px">
-            
+
             <div class="botones" onmouseover="sound()">
                 <button id="btn_Jugar" onclick="location.href='Nivel.html'"> ¡Jugar!</button>
-            </div>
-
-            <div class="botones" onmouseover="sound()">
-                <button class="" id="btn_Multijugador" onclick="location.href='Juego.html'"> Minijuego</button>
 
             </div>
+       
+            <a href="MiPuntuacion.html">Mi puntuacion</a>
+
         </div>
 
 
-        <a href="Creditos.html">Créditos</a>
-
+        <a id="credits"href="Creditos.html">Créditos</a>
+        <br>
+       
 
         <div class="config" onmouseover="sound()">
             <button class="" id="btn_config" onclick="location.href='Configuracion.html'"></button>
@@ -38,27 +38,31 @@
         <div class="records" onmouseover="sound()">
             <button class="" id="btn_records" onclick="soundclick()"></button>
         </div>
-        <div class="btn_Cerrar"  onmouseover="sound()">
-            <button id="btn_Cerrar"  onclick="location.href='CerrarSesion.php'"> Cerrar Sesión</button>
+        <div class="btn_Cerrar" onmouseover="sound()">
+            <button id="btn_Cerrar" onclick="location.href='CerrarSesion.php'"> Cerrar Sesión</button>
         </div>
+      
     </div>
     <div id="scores" class="scores">
         <div class="ganadores">
-            <h3>Andrew Drei</h3>
+            <h5 id="primerlugar"></h5>
             <br>
-            <h3>Monivett</h3>
+            <h5 id="segundolugar"></h5>
             <br>
-            <h3>Robernator</h3>
+            <h5 id="tercerolugar"></h5>
 
+            <button class="" id="n1" onclick="soundclick()">Nivel 1</button>
+            <button class="" id="n2" onclick="soundclick()">Nivel 2</button>
+            <button class="" id="n3" onclick="soundclick()">Nivel 3</button>
         </div>
         <div class="x" onmouseover="sound()">
 
 
-            <button class="" id="x"  onclick="soundclick()"></button>
+            <button class="" id="x" onclick="soundclick()"></button>
         </div>
     </div>
 
- <!--MUSICA-->
+    <!--MUSICA-->
     <audio id="Audio" autoplay>
 
         <source src="music/prueba.mp3" type="audio/mp3">
@@ -66,17 +70,17 @@
     </audio>
     <!--SONIDO-->
 
-		<audio id="Audio2" autoplay >
+    <audio id="Audio2" autoplay>
 
-			<source src="music/btn_sound.mp3" type="audio/mp3">
-			Your browser does not support the audio element.
-		</audio>
+        <source src="music/btn_sound.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
-		<audio id="Audio3" autoplay >
+    <audio id="Audio3" autoplay>
 
-			<source src="music/btn_click.mp3" type="audio/mp3">
-			Your browser does not support the audio element.
-		</audio>
+        <source src="music/btn_click.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <script src="js/Principal.js"></script>
     <script src="js/Audio.js"></script>

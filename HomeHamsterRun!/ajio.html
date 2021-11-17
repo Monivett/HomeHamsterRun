@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <!--NECESITAMOS DE UN SERVIDOR WEB : XAMPP ejecutar Apache
+	Buscar htdocs en donde descargaste el XAMPP
+Pegar en htdocs la carpeta del proyecto para ejecutarlo en el servidor web
+Escribir en el navegador: http://localhost/3_facebook/3_facebook/-->
+    <!-- Configuracion rapida de facebook api -->
+    <!-- REGISTRARSE EN: https://developers.facebook.com/docs/javascript/quickstart -->
+    <title>3.0 Facebook</title>
+    <link rel="stylesheet" type="text/css" href="css/Creditos.css">
+    <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/libs/mifacebook.js"></script>
+    <script type="text/javascript">
+        function shareFB() {
+            var score = $("#txtScore").val();
+            shareScore(score);
+        }
+    </script>
+</head>
+
+<body>
+
+
+
+    <div class="background">
+        <h1>¡Felicidades has ganado el juego!</h1>
+        <br>
+        <h2>Tu puntuación es de</h2>
+        <div class="botones">
+            <button class="" id="btn_Multijugador" onclick="location.href='MiPuntuacion.html'">Siguiente</button>
+
+        </div>
+    </div>
+</body>
+
+</html>

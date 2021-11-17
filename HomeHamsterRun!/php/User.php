@@ -74,5 +74,52 @@ if ( $_POST['opc'] == 3 ) {
     echo json_encode( $result );
 
 }
+//REGISTRAMOS LA PUNTUACIÓN
+if ( $_POST['opc'] == 5 ) {
+    $UserID = $_POST['UserID'];
+    $tiempo = $_POST['tiempo'];
+    $nivel = $_POST['nivel'];
 
+    $json = [
+        'UserID' => $UserID,
+        'tiempo'=> $tiempo,
+        'nivel'=> $nivel
+
+    ];
+
+    $pasa = json_encode( $json );
+    $result = $user->RegistrarPuntuacion( $pasa );
+    echo $result;
+}
+//MOSTRAMOS LA PUNTUACIÓN DE TODOS
+if ( $_POST['opc'] == 6 ) {
+   
+    $nivel = $_POST['nivel'];
+
+    $json = [
+      
+        'nivel'=> $nivel
+
+    ];
+
+    $pasa = json_encode( $json );
+    $result = $user->VerPuntuacion( $pasa );
+    echo json_encode( $result );
+}
+//MOSTRAMOS LA PUNTUACIÓN DEL USUARIO
+if ( $_POST['opc'] == 7 ) {
+   
+    $nivel = $_POST['nivel'];
+    $UserID = $_POST['UserID'];
+    $json = [
+      
+        'nivel'=> $nivel,
+        'UserID'=> $UserID
+
+    ];
+
+    $pasa = json_encode( $json );
+    $result = $user->VerPuntuacionUser( $pasa );
+    echo json_encode( $result );
+}
 ?>

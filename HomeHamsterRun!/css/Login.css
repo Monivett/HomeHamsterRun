@@ -19,7 +19,7 @@
         background-position: 100px;
     }
 }
-h1,h2{
+h1{
     font-family: cursive;
     animation: abajo 1s ease-in forwards ;
 }

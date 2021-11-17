@@ -37,7 +37,7 @@ class User extends conexion {
 
         $query = "Call Proc_Login( '$username','$contrasena');";
         $datos = parent::ObtenerUsuario( $query );
-        //Si se agrego
+   
 
         return $datos;
     }
@@ -51,7 +51,7 @@ class User extends conexion {
 
         $query = "Call Proc_Login( '$username','$contrasena');";
         $datos = parent::obtenerDatos( $query );
-        //Si se agrego
+ 
 
         return $datos;
     }
@@ -81,6 +81,54 @@ class User extends conexion {
         }
     }
 
+    public function RegistrarPuntuacion ( $json ) {
+
+        $datos = json_decode( $json, true );
+
+        $UserID = $datos['UserID'];
+        $tiempo = $datos['tiempo'];
+        $nivel = $datos['nivel'];
+
+        $query = "Call Proc_Tiempo( 'I', '$UserID', '$tiempo','$nivel');";
+        $verificacion = parent::rowsAfectados( $query );
+        //Si se agrego
+
+        if ( $verificacion == 1 ) {
+            $success = 'success';
+            return 1;
+        } else {
+            $success = 'fail';
+            return  parent::Error();
+        }
+        ;
+    }
+
+    public function VerPuntuacion ( $json ) {
+
+        $datos = json_decode( $json, true );
+
+    
+        $nivel = $datos['nivel'];
+
+        $query = "Call Proc_Tiempo( 'A', '0', '0','$nivel');";
+        $datos = parent::obtenerDatos( $query );
+
+        return ( $datos );
+    }
+
+    
+    public function VerPuntuacionUser ( $json ) {
+
+        $datos = json_decode( $json, true );
+
+    
+        $nivel = $datos['nivel'];
+        $UserID = $datos['UserID'];
+        $query = "Call Proc_Tiempo( 'S', '$UserID', '0','$nivel');";
+        $datos = parent::obtenerDatos( $query );
+
+        return ( $datos );
+    }
 }
 
 ?>

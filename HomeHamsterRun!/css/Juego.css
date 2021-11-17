@@ -86,9 +86,7 @@ border-radius: 10px;
     display: none;
 }
 
-#botonreproducir{
-    display: none;
-}
+
 #btn_Salir,#btn_Pausa,#btn_Music, #btn_Music2{
     height: 50px;
     width: 50px;

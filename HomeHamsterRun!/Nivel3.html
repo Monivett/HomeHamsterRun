@@ -5,6 +5,7 @@
 	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
 	<link rel="stylesheet" href="css/Juego.css">
 	<link rel="stylesheet" href="css/Pausa.css">
+	<link rel="stylesheet" href="css/LoseWin.css">
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/libs/three/three.js"></script>
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
@@ -35,7 +36,12 @@
 		var isWorldReady = [false, false, false, false, false, false, false];
 		var nPlayers = 2;
 		var players = [];
-		var tiempoTotal = 300;
+		var enemies = [];
+		var bullets = [];
+		var items = [];
+		var difMultiplier = 2;
+		var win = false;
+		var lose = false;
 
 		$(document).ready(function () {
 
@@ -46,6 +52,7 @@
 				object.position.x = 14;
 				object.position.y = 2;
 				object.box = new THREE.BoundingBoxHelper(object, 0x00ffff);
+				object.scale.set(3, 1, 1);
 				object.box.update();
 				Collisions.push(object);
 				CollisionsBox.push(object.box);
@@ -288,6 +295,77 @@
 				Collisions.push(box27);
 				CollisionsBox.push(box27.box);
 
+				var bullet = object.clone();
+				bullet.position.x = -40;
+				bullet.position.y = -40;
+				bullet.scale.set(1, 0.3, 0.4);
+				bullet.name = "bullet";
+
+				var heal = object.clone();
+				heal.position.x = -13;
+				heal.position.y = 12.5;
+				heal.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
+				heal.light.position.set(heal.position.x, heal.position.y, heal.position.z);
+				heal.scale.set(0.8, 0.8, 0.8);
+				heal.box = new THREE.Box3();
+				heal.box.setFromObject(heal);
+				heal.effect = 0;
+				items.push(heal);
+
+				var heal2 = object.clone();
+				heal2.position.x = 14.5;
+				heal2.position.y = 0;
+				heal2.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
+				heal2.light.position.set(heal2.position.x, heal2.position.y, heal2.position.z);
+				heal2.scale.set(0.8, 0.8, 0.8);
+				heal2.box = new THREE.Box3();
+				heal2.box.setFromObject(heal2);
+				heal2.effect = 0;
+				items.push(heal2);
+
+				var speed = object.clone();
+				speed.position.x = -11;
+				speed.position.y = -3.5;
+				speed.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
+				speed.light.position.set(speed.position.x, speed.position.y, speed.position.z);
+				speed.scale.set(0.8, 0.8, 0.8);
+				speed.box = new THREE.Box3();
+				speed.box.setFromObject(speed);
+				speed.effect = 1;
+				items.push(speed);
+
+				var speed2 = object.clone();
+				speed2.position.x = 2;
+				speed2.position.y = 12;
+				speed2.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
+				speed2.light.position.set(speed2.position.x, speed2.position.y, speed2.position.z);
+				speed2.scale.set(0.8, 0.8, 0.8);
+				speed2.box = new THREE.Box3();
+				speed2.box.setFromObject(speed2);
+				speed2.effect = 1;
+				items.push(speed2);
+
+				var shootSpeed = object.clone();
+				shootSpeed.position.x = 7.2;
+				shootSpeed.position.y = 2.8;
+				shootSpeed.light = new THREE.PointLight(0xff0000, 3, 4, 3);
+				shootSpeed.light.position.set(shootSpeed.position.x, shootSpeed.position.y, shootSpeed.position.z);
+				shootSpeed.scale.set(0.8, 0.8, 0.8);
+				shootSpeed.box = new THREE.Box3();
+				shootSpeed.box.setFromObject(shootSpeed);
+				shootSpeed.effect = 2;
+				items.push(shootSpeed);
+
+				var shootSpeed2 = object.clone();
+				shootSpeed2.position.x = -13.5;
+				shootSpeed2.position.y = 6;
+				shootSpeed2.light = new THREE.PointLight(0xff0000, 3, 4, 3);
+				shootSpeed2.light.position.set(shootSpeed2.position.x, shootSpeed2.position.y, shootSpeed2.position.z);
+				shootSpeed2.scale.set(0.8, 0.8, 0.8);
+				shootSpeed2.box = new THREE.Box3();
+				shootSpeed2.box.setFromObject(shootSpeed2);
+				shootSpeed2.effect = 2;
+				items.push(shootSpeed2);
 
 				scene.add(object);
 				scene.add(box2);
@@ -316,6 +394,19 @@
 				scene.add(box25);
 				scene.add(box26);
 				scene.add(box27);
+				scene.add(bullet);
+				scene.add(heal);
+				scene.add(heal2);
+				scene.add(speed);
+				scene.add(speed2);
+				scene.add(shootSpeed);
+				scene.add(shootSpeed2);
+				scene.add(heal.light);
+				scene.add(heal2.light);
+				scene.add(speed.light);
+				scene.add(speed2.light);
+				scene.add(shootSpeed.light);
+				scene.add(shootSpeed2.light);
 
 				Collisions.push(object);
 				isWorldReady[0] = true;
@@ -336,6 +427,11 @@
 				player.isFalling = false;
 				player.isJumping = false;
 				player.isWalking = false;
+				player.isAlive = true;
+				player.canShoot = true;
+				player.shootCounter = 0;
+				player.maxShoot = 2;
+				player.hp = 100;
 				player.fall = 0;
 				player.dir = 0;
 				player.visible = true;
@@ -389,6 +485,12 @@
 						gravityAff.push(player2);
 						player2.isFalling = false;
 						player2.isJumping = false;
+						player2.isWalking = false;
+						player2.isAlive = true;
+						player2.canShoot = true;
+						player2.shootCounter = 0;
+						player2.maxShoot = 2;
+						player2.hp = 100;
 						player2.poses = [];
 						player2.frames = 0;
 						player2.fall = 0;
@@ -449,26 +551,60 @@
 			//TORTUGA
 			loadOBJWithMTL("assets/", "tortugabase.obj", "tortugabase.mtl", (tortuga) => {
 
-
-
 				tortuga.position.x = -5;
 				tortuga.position.y = 11;
 				tortuga.rotation.y = THREE.Math.degToRad(-90);
 				tortuga.scale.set(0.4, 0.4, 0.4);
+				tortuga.mobile = true;
+				tortuga.box = new THREE.Box3();
+				tortuga.box.setFromObject(tortuga);
+				tortuga.speed = 2 * difMultiplier;
+				tortuga.maxmov = 6;
+				tortuga.mov = 0;
+				tortuga.dmg = 30 * difMultiplier;
+				tortuga.hp = 1;
+				enemies.push(tortuga);
 
 				var tortuga2 = tortuga.clone();
 				tortuga2.position.x = 3;
 				tortuga2.position.y = 4.5;
+				tortuga2.mobile = true;
+				tortuga2.box = new THREE.Box3();
+				tortuga2.box.setFromObject(tortuga2);
+				tortuga2.speed = 2 * difMultiplier;
+				tortuga2.maxmov = 5;
+				tortuga2.mov = 0;
+				tortuga2.dmg = 30 * difMultiplier;
+				tortuga2.hp = 1;
+				enemies.push(tortuga2);
 
 				var tortuga3 = tortuga.clone();
 				tortuga3.position.x = -14;
-				tortuga3.position.y = -2;
+				tortuga3.position.y = -1.1;
 				tortuga3.rotation.y = THREE.Math.degToRad(90);
+				tortuga3.mobile = true;
+				tortuga3.box = new THREE.Box3();
+				tortuga3.box.setFromObject(tortuga3);
+				tortuga3.speed = 2 * difMultiplier;
+				tortuga3.maxmov = 10;
+				tortuga3.mov = 0;
+				tortuga3.dmg = 30 * difMultiplier;
+				tortuga3.hp = 1;
+				enemies.push(tortuga3);
 
 				var tortuga4 = tortuga.clone();
 				tortuga4.position.x = 14;
-				tortuga4.position.y = 0;
+				tortuga4.position.y = -0.8;
 				tortuga4.rotation.y = THREE.Math.degToRad(-90);
+				tortuga4.mobile = true;
+				tortuga4.box = new THREE.Box3();
+				tortuga4.box.setFromObject(tortuga4);
+				tortuga4.speed = 2 * difMultiplier;
+				tortuga4.maxmov = 6;
+				tortuga4.mov = 0;
+				tortuga4.dmg = 30 * difMultiplier;
+				tortuga4.hp = 1;
+				enemies.push(tortuga4);
 
 				scene.add(tortuga);
 				scene.add(tortuga2);
@@ -485,6 +621,15 @@
 				pelusa.position.y = -1;
 				pelusa.scale.set(0.4, 0.4, 0.4);
 				pelusa.rotation.y = THREE.Math.degToRad(90);
+				pelusa.mobile = true;
+				pelusa.box = new THREE.Box3();
+				pelusa.box.setFromObject(pelusa);
+				pelusa.speed = 2 * difMultiplier;
+				pelusa.maxmov = 3;
+				pelusa.mov = 0;
+				pelusa.dmg = 20 * difMultiplier;
+				pelusa.hp = 1;
+				enemies.push(pelusa);
 
 				//PELUSA ARRIBA
 				var pelusaArriba = pelusa.clone();
@@ -492,23 +637,45 @@
 				pelusaArriba.position.y = 11;
 				pelusaArriba.rotation.y = THREE.Math.degToRad(-90);
 				pelusaArriba.rotation.x = THREE.Math.degToRad(30);
+				pelusaArriba.mobile = true;
+				pelusaArriba.box = new THREE.Box3();
+				pelusaArriba.box.setFromObject(pelusaArriba);
+				pelusaArriba.speed = 2 * difMultiplier;
+				pelusaArriba.maxmov = 3;
+				pelusaArriba.mov = 0;
+				pelusaArriba.dmg = 20 * difMultiplier;
+				pelusaArriba.hp = 1;
+				enemies.push(pelusaArriba);
 
 				//PELUSA ARRIBA IZQUIERDA
 				var pelusaAIzq = pelusa.clone();
 				pelusaAIzq.position.x = -15;
 				pelusaAIzq.position.y = 5;
 				pelusaAIzq.rotation.y = THREE.Math.degToRad(90);
-
+				pelusaAIzq.mobile = true;
+				pelusaAIzq.box = new THREE.Box3();
+				pelusaAIzq.box.setFromObject(pelusaAIzq);
+				pelusaAIzq.speed = 2 * difMultiplier;
+				pelusaAIzq.maxmov = 3;
+				pelusaAIzq.mov = 0;
+				pelusaAIzq.dmg = 20 * difMultiplier;
+				pelusaAIzq.hp = 1;
+				enemies.push(pelusaAIzq);
 
 				//PELUSA ARRIBA DERECHA
 				var pelusaADer = pelusa.clone();
 				pelusaADer.position.x = 10;
 				pelusaADer.position.y = 12;
 				pelusaADer.rotation.y = THREE.Math.degToRad(-90);
-
-
-
-
+				pelusaADer.mobile = true;
+				pelusaADer.box = new THREE.Box3();
+				pelusaADer.box.setFromObject(pelusaADer);
+				pelusaADer.speed = 2 * difMultiplier;
+				pelusaADer.maxmov = 5;
+				pelusaADer.mov = 0;
+				pelusaADer.dmg = 20 * difMultiplier;
+				pelusaADer.hp = 1;
+				enemies.push(pelusaADer);
 
 				scene.add(pelusa);
 
@@ -650,6 +817,7 @@
 
 		var deltaTime = 0;
 		var velocidad = 10;
+		var tiempoTotal = 300;
 
 		function render() {
 			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4] && isWorldReady[5] && isWorldReady[6]) {
@@ -664,6 +832,8 @@
 					var player2 = scene.getObjectByName("player2");
 					player2.box.setFromObject(player2);
 				}
+
+				var sampleBullet = scene.getObjectByName("bullet");
 
 				for (var j = 0; j < players.length; j++) {
 					for (var i = 0; i < CollisionsBox.length; i++) {
@@ -681,10 +851,13 @@
 						}
 					}
 				}
-				if (Pausa == false) {
+				if (Pausa == false && win == false && lose == false) {
 					//TIEMPO 
 					tiempoTotal -= deltaTime;
 					$('#tiempo').text("Tiempo restante: " + Math.floor(tiempoTotal));
+					if (Math.floor(tiempoTotal) == 0) {
+						lose = true;
+					}
 					if (keys["A"]) {
 						player.rotation.y = THREE.Math.degToRad(-90);
 						for (var i = 0; i < CollisionsBox.length; i++) {
@@ -732,6 +905,27 @@
 						player.visible = true;
 						players[0].poses[0].visible = false;
 						players[0].poses[1].visible = false;
+					}
+
+					if (keys["S"] && player.canShoot == true) {
+						var newBullet = sampleBullet.clone();
+						newBullet.rotation.y = player.rotation.y;
+						newBullet.position.set(player.position.x, player.position.y + 0.5, player.position.z);
+						newBullet.max = player.maxShoot;
+						newBullet.duration = 0;
+						newBullet.box = new THREE.Box3();
+						newBullet.box.setFromObject(newBullet);
+						scene.add(newBullet);
+						bullets.push(newBullet);
+						player.canShoot = false;
+					}
+
+					if (player.canShoot == false) {
+						player.shootCounter += deltaTime;
+						if (player.shootCounter >= player.maxShoot) {
+							player.canShoot = true;
+							player.shootCounter = 0;
+						}
 					}
 
 					if (nPlayers == 2) {
@@ -783,6 +977,27 @@
 							player2.visible = true;
 							players[1].poses[0].visible = false;
 							players[1].poses[1].visible = false;
+						}
+
+						if (keys["K"] && player2.canShoot == true) {
+							var newBullet = sampleBullet.clone();
+							newBullet.rotation.y = player2.rotation.y;
+							newBullet.position.set(player2.position.x, player2.position.y + 0.5, player2.position.z);
+							newBullet.max = player.maxShoot;
+							newBullet.duration = 0;
+							newBullet.box = new THREE.Box3();
+							newBullet.box.setFromObject(newBullet);
+							scene.add(newBullet);
+							bullets.push(newBullet);
+							player2.canShoot = false;
+						}
+
+						if (player2.canShoot == false) {
+							player2.shootCounter += deltaTime;
+							if (player2.shootCounter >= player2.maxShoot) {
+								player2.canShoot = true;
+								player2.shootCounter = 0;
+							}
 						}
 					}
 
@@ -897,6 +1112,97 @@
 					camera.position.x = player.position.x;
 					camera.position.y = player.position.y;
 
+					for (var i = 0; i < enemies.length; i++) {
+						var col = moveEnemy(enemies[i]);
+						if (col == true) {
+							enemies[i].visible = false;
+							enemies.splice(i, 1);
+							i--;
+						}
+					}
+
+					for (var i = 0; i < bullets.length; i++) {
+						var col = false;
+						if (bullets[i].duration <= bullets[i].max) {
+							bullets[i].translateZ(velocidad * 2 * deltaTime);
+							bullets[i].duration += deltaTime;
+							bullets[i].box.setFromObject(bullets[i]);
+							for (var j = 0; j < CollisionsBox.length; j++) {
+								if (bullets[i].box.intersectsBox(CollisionsBox[j].box)) {
+									scene.remove(bullets[i]);
+									bullets.splice(i, 1);
+									i--;
+									col = true;
+									break;
+								}
+							}
+							if (col == false) {
+								for (var j = 0; j < enemies.length; j++) {
+									if (bullets[i].box.intersectsBox(enemies[j].box)) {
+										scene.remove(bullets[i]);
+										bullets.splice(i, 1);
+										i--;
+										col = true;
+										enemies[j].hp--;
+										if (enemies[j].hp <= 0) {
+											enemies[j].visible = false;
+											enemies.splice(j, 1);
+										}
+										break;
+									}
+								}
+							}
+						}
+						else {
+							scene.remove(bullets[i]);
+							bullets.splice(i, 1);
+							i--;
+						}
+					}
+
+					for (var i = 0; i < items.length; i++) {
+						items[i].rotateY(THREE.Math.degToRad(30) * deltaTime);
+						items[i].rotateZ(-THREE.Math.degToRad(30) * deltaTime);
+						items[i].rotateX(-THREE.Math.degToRad(30) * deltaTime);
+						for (var j = 0; j < players.length; j++) {
+							if (items[i].box.intersectsBox(players[j].box)) {
+								sound();
+								switch (items[i].effect) {
+
+									case 0: {
+										players[j].hp += 50;
+										if (players[j].hp > 100) {
+											players[j].hp = 100;
+										}
+										break;
+									}
+
+									case 1: {
+										velocidad += 3;
+										if (velocidad > 15) {
+											velocidad = 15;
+										}
+										break;
+									}
+
+									case 2: {
+										players[j].maxShoot -= 1;
+										if (players[j].maxShoot < 1) {
+											players[j].maxShoot = 1;
+										}
+										break;
+									}
+								}
+								scene.remove(items[i]);
+								scene.remove(items[i].light);
+								items.splice(i, 1);
+								i--;
+								break;
+							}
+
+						}
+					}
+
 					for (var i = 0; i < players.length; i++) {
 						for (var j = 0; j < players[i].poses.length; j++) {
 							players[i].poses[j].position.x = players[i].position.x;
@@ -946,12 +1252,53 @@
 							players[i].poses[0].visible = false;
 							players[i].poses[1].visible = true;
 						}
+						if (i == 0) {
+							updateHP(players[i], "myBar")
+						}
+						else {
+							updateHP(players[i], "myBar2")
+							if (distance(players[i - 1].position, players[i].position) >= 15) {
+								players[i].position.x = players[i - 1].position.x;
+								players[i].position.y = players[i - 1].position.y;
+							}
+						}
+					}
+
+					if (enemies.length <= 0) {
+						win = true;
+					}
+
+					for (var i = 0; i < players.length; i++) {
+						if (players[i].hp <= 0) {
+							lose = true;
+							break;
+						}
 					}
 				}
 
 			}
-			requestAnimationFrame(render);
-			renderer.render(scene, camera);
+
+			if (win == true) {
+				//toDO Aqui va la pantalla de ganar
+				document.getElementById('background_win').style.display = 'block';
+				document.getElementById('botonesL').style.display = 'block';
+				document.getElementById('tiempoFinal').innerHTML = 300 - Math.floor(tiempoTotal) + " seg";
+				RegistrarTiempo(3, 300 - Math.floor(tiempoTotal));
+				if(  nPlayers == 2){
+				RegistrarTiempo2(3, 300 - Math.floor(tiempoTotal));
+				}
+			}
+			else {
+				if (lose == true) {
+					//toDO Aqui va la pantalla de perder
+					document.getElementById('background_loose').style.display = 'block';
+					document.getElementById('botonesP').style.display = 'block';
+				}
+				else {
+					requestAnimationFrame(render);
+					renderer.render(scene, camera);
+				}
+			}
 
 		}
 
@@ -984,7 +1331,7 @@
 <body>
 
 	<div class="time">
-		<h1 id="tiempo"></h1>
+		<h1 id="tiempo">Tiempo 00:00:00</h1>
 	</div>
 	<img id="player1icon" src="img/icon.png">
 	<h2 id="username"></h2>
@@ -994,6 +1341,7 @@
 
 	</div>
 	<div id="jugador2">
+
 		<img id="player2icon" src="img/icon.png">
 		<h2 id="username2"></h2>
 		<div id="myProgress2">
@@ -1011,27 +1359,32 @@
 	</audio>
 
 	<div class="btn2">
-		<div class="botones" id="botonreproducir"  onmouseover="sound()">
+		<div class="botones" id="botonreproducir" onmouseover="sound()">
 			<button class="" id="btn_Music" onclick="play()">
-			
-				<svg id="Music_icon"xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
-					<path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"/>
-					<path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"/>
-					<path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"/>
-				  </svg>
+
+				<svg id="Music_icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+					<path
+						d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z" />
+					<path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z" />
+					<path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z" />
+				</svg>
 			</button>
 		</div>
-		<div class="botones" id="botonsilencio"  onmouseover="sound()">
-			<button class="" id="btn_Music2" onclick="play()">
-			
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
-					<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
-				  </svg>
+
+		<div class="botones" id="botonsilencio" onmouseover="sound()">
+			<button class="" id="btn_Music" onclick="play()">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+					class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
+					<path
+						d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z" />
+				</svg>
 			</button>
 		</div>
+
 	</div>
-		<div class="btn">
-		<div class="botones"  onmouseover="sound()">
+	<div class="btn">
+		<div class="botones" onmouseover="sound()">
 			<button id="btn_Pausa" onclick="soundclick()">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
 					class="bi bi-pause-circle" viewBox="0 0 16 16">
@@ -1044,7 +1397,7 @@
 			</button>
 		</div>
 
-		<div class="botones" onmouseover="sound()" >
+		<div class="botones" onmouseover="sound()">
 			<button class="" id="btn_Salir" onclick="location.href='Principal.html'">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
 					class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -1055,11 +1408,12 @@
 				</svg>
 			</button>
 		</div>
-	
+
 
 	</div>
 
-</div>
+
+	</div>
 
 	<div id="scene-section" />
 
@@ -1080,6 +1434,33 @@
 		</div>
 
 	</div>
+
+	<!--MENU GANAR-->
+	<div class="background_win" id="background_win">
+		<h2>Felicidades has ganado el juego</h2>
+		<br>
+		<h2>Tu tiempo es de</h2>
+		<br>
+		<h2 id="tiempoFinal">300seg</h2>
+		<br>
+		<div class="botonesL" id="botonesL">
+			<button class="" id="btn_Puntos" onclick="location.href='MiPuntuacion.html'">Siguiente</button>
+
+		</div>
+	</div>
+
+		<!--MENU PERDER-->
+		<div class="background_loose" id="background_loose">
+			<h2>Has perdido el juego</h2>
+			<br>
+			<h2>Suerte para la proxima</h2>
+			<br>
+	
+			<div class="botonesP" id="botonesP">
+				<button class="" id="btn_VolverP" onclick="location.href='Nivel.html'">Volver</button>
+	
+			</div>
+		</div>
 	<!--SONIDO-->
 	<audio id="Audio2" autoplay>
 

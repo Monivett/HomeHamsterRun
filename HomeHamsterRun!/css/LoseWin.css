@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.background_win{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: url(../img/backwin.png);
+    background-size:cover;
+   display: none;
+
+
+}
+
+.background_loose{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: url(../img/backloose.png);
+    background-size:cover;
+    display: none;
+
+
+}
+h2{
+   
+
+        font-family: cursive;
+        color: white;
+        text-align: center;
+
+
+    
+}
+
+.botonesL,.botonesP {
+   
+    background-image: url('../img/BotonesSemillas.png');
+    background-repeat:no-repeat;
+    height:120px;
+    width:230px;
+    background-size: 100% 100%;
+    background-position:center;
+margin: auto;
+display: none;
+   
+}
+
+#btn_Puntos, #btn_VolverP{
+    height: 110px;
+    width: 230px;
+    background: none ;
+    border: none;
+    font-family:cursive;
+    font-size: 150%;
+    color: rgb(204, 118, 6);
+    text-align: center;
+
+}
+.botonesL:hover,.botonesP:hover{
+    height:140px;
+    width:250px;
+}
+#btn_Puntos:hover,#btn_VolverP:hover{
+    height:140px;
+    width:250px;
+}
+
+
+
+
