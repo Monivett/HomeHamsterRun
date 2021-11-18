@@ -40,6 +40,24 @@ function sound() {
     audio.play();
 
 }
+function soundGolpe() {
+
+    let audio = document.querySelector('#Audio4');
+    audio.play();
+
+}
+function soundItem() {
+
+    let audio = document.querySelector('#Audio5');
+    audio.play();
+
+}
+function soundDisparo() {
+
+    let audio = document.querySelector('#Audio6');
+    audio.play();
+
+}
 function soundclick() {
 
     let audio = document.querySelector('#Audio3');

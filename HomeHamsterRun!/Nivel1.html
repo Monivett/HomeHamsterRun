@@ -5,6 +5,7 @@
 	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
 	<link rel="stylesheet" href="css/Juego.css">
 	<link rel="stylesheet" href="css/Pausa.css">
+	<link rel="stylesheet" href="css/Cargando.css">
 	<link rel="stylesheet" href="css/LoseWin.css">
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/libs/three/three.js"></script>
@@ -31,8 +32,8 @@
 		var jumpStrength = 14;
 		var direccioncubo1;
 		var direccioncubo2;
-	
-		var isWorldReady = [false, false, false, false, false, false];
+
+		var isWorldReady = [false, false, false, false, false, false,false,false,false,false];
 		var nPlayers = 2;
 		var players = [];
 		var enemies = [];
@@ -250,77 +251,10 @@
 				Collisions.push(box24);
 				CollisionsBox.push(box24.box);
 
-				var bullet = object.clone();
-				bullet.position.x = -40;
-				bullet.position.y = -40;
-				bullet.scale.set(1, 0.3, 0.4);
-				bullet.name = "bullet";
+			
 
-				var heal = object.clone();
-				heal.position.x = -6;
-				heal.position.y = 8;
-				heal.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
-				heal.light.position.set(heal.position.x, heal.position.y, heal.position.z);
-				heal.scale.set(0.8, 0.8, 0.8);
-				heal.box = new THREE.Box3();
-				heal.box.setFromObject(heal);
-				heal.effect = 0;
-				items.push(heal);
+			
 
-				var heal2 = object.clone();
-				heal2.position.x = 13;
-				heal2.position.y = 1.5;
-				heal2.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
-				heal2.light.position.set(heal2.position.x, heal2.position.y, heal2.position.z);
-				heal2.scale.set(0.8, 0.8, 0.8);
-				heal2.box = new THREE.Box3();
-				heal2.box.setFromObject(heal2);
-				heal2.effect = 0;
-				items.push(heal2);
-
-				var speed = object.clone();
-				speed.position.x = -11;
-				speed.position.y = -2.5;
-				speed.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
-				speed.light.position.set(speed.position.x, speed.position.y, speed.position.z);
-				speed.scale.set(0.8, 0.8, 0.8);
-				speed.box = new THREE.Box3();
-				speed.box.setFromObject(speed);
-				speed.effect = 1;
-				items.push(speed);
-
-				var speed2 = object.clone();
-				speed2.position.x = 6;
-				speed2.position.y = 8;
-				speed2.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
-				speed2.light.position.set(speed2.position.x, speed2.position.y, speed2.position.z);
-				speed2.scale.set(0.8, 0.8, 0.8);
-				speed2.box = new THREE.Box3();
-				speed2.box.setFromObject(speed2);
-				speed2.effect = 1;
-				items.push(speed2);
-
-				var shootSpeed = object.clone();
-				shootSpeed.position.x = 10;
-				shootSpeed.position.y = -2.5;
-				shootSpeed.light = new THREE.PointLight(0xff0000, 3, 4, 3);
-				shootSpeed.light.position.set(shootSpeed.position.x, shootSpeed.position.y, shootSpeed.position.z);
-				shootSpeed.scale.set(0.8, 0.8, 0.8);
-				shootSpeed.box = new THREE.Box3();
-				shootSpeed.box.setFromObject(shootSpeed);
-				shootSpeed.effect = 2;
-				items.push(shootSpeed);
-
-				var shootSpeed2 = object.clone();
-				shootSpeed2.position.x = -13.5;
-				shootSpeed2.position.y = 1.5;
-				shootSpeed2.light = new THREE.PointLight(0xff0000, 3, 4, 3);
-				shootSpeed2.light.position.set(shootSpeed2.position.x, shootSpeed2.position.y, shootSpeed2.position.z);
-				shootSpeed2.scale.set(0.8, 0.8, 0.8);
-				shootSpeed2.box = new THREE.Box3();
-				shootSpeed2.box.setFromObject(shootSpeed2);
-				shootSpeed2.effect = 2;
-				items.push(shootSpeed2);
 
 				scene.add(object);
 				scene.add(box2);
@@ -346,19 +280,7 @@
 				scene.add(box22);
 				scene.add(box23);
 				scene.add(box24);
-				scene.add(bullet);
-				scene.add(heal);
-				scene.add(heal2);
-				scene.add(speed);
-				scene.add(speed2);
-				scene.add(shootSpeed);
-				scene.add(shootSpeed2);
-				scene.add(heal.light);
-				scene.add(heal2.light);
-				scene.add(speed.light);
-				scene.add(speed2.light);
-				scene.add(shootSpeed.light);
-				scene.add(shootSpeed2.light);
+			
 
 				Collisions.push(object);
 				isWorldReady[0] = true;
@@ -594,6 +516,126 @@
 				isWorldReady[5] = true;
 			});
 
+//ITEMS------------------
+			//VIDA
+			loadOBJWithMTL("assets/", "banana.obj", "banana.mtl", (vida) => {
+				var heal = vida.clone();
+				heal.position.x = -6;
+				heal.position.y = 8;
+				heal.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
+				heal.light.position.set(heal.position.x, heal.position.y, heal.position.z);
+				heal.scale.set(0.8, 0.8, 0.8);
+				heal.box = new THREE.Box3();
+				heal.box.setFromObject(heal);
+				heal.effect = 0;
+				items.push(heal);
+
+				var heal2 = vida.clone();
+				heal2.position.x = 13;
+				heal2.position.y = 1.5;
+				heal2.light = new THREE.PointLight(0x00ff00, 3, 4, 3);
+				heal2.light.position.set(heal2.position.x, heal2.position.y, heal2.position.z);
+				heal2.scale.set(0.8, 0.8, 0.8);
+				heal2.box = new THREE.Box3();
+				heal2.box.setFromObject(heal2);
+				heal2.effect = 0;
+				items.push(heal2);
+
+
+				scene.add(heal);
+				scene.add(heal2);
+				scene.add(heal.light);
+				scene.add(heal2.light);
+
+				isWorldReady[6] = true;
+			});
+
+			//VELOCIDAD
+			loadOBJWithMTL("assets/", "zanahoria.obj", "zanahoria.mtl", (velocidad) => {
+
+
+			
+				var speed = velocidad.clone();
+				speed.position.x = -11;
+				speed.position.y = -2.5;
+				speed.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
+				speed.light.position.set(speed.position.x, speed.position.y, speed.position.z);
+				speed.scale.set(0.8, 0.8, 0.8);
+				speed.box = new THREE.Box3();
+				speed.box.setFromObject(speed);
+				speed.effect = 1;
+				items.push(speed);
+
+				var speed2 = velocidad.clone();
+				speed2.position.x = 6;
+				speed2.position.y = 8;
+				speed2.light = new THREE.PointLight(0x0000ff, 3, 4, 3);
+				speed2.light.position.set(speed2.position.x, speed2.position.y, speed2.position.z);
+				speed2.scale.set(0.8, 0.8, 0.8);
+				speed2.box = new THREE.Box3();
+				speed2.box.setFromObject(speed2);
+				speed2.effect = 1;
+				items.push(speed2);
+
+
+				scene.add(speed);
+				scene.add(speed2);
+				scene.add(speed.light);
+				scene.add(speed2.light);
+
+				isWorldReady[7] = true;
+			});
+
+			//VELOCIDAD DE BALA
+
+			loadOBJWithMTL("assets/", "Semilla.obj", "Semilla.mtl", (balaVel) => {
+				balaVel.scale.set(0.2, 0.3, 0.3);
+				
+			
+				var shootSpeed = balaVel.clone();
+				shootSpeed.position.x = 10;
+				shootSpeed.position.y = -2.5;
+				shootSpeed.light = new THREE.PointLight(0xff0000, 3, 4, 3);
+				shootSpeed.light.position.set(shootSpeed.position.x, shootSpeed.position.y, shootSpeed.position.z);
+			
+				shootSpeed.box = new THREE.Box3();
+				shootSpeed.box.setFromObject(shootSpeed);
+				shootSpeed.effect = 2;
+				items.push(shootSpeed);
+
+				var shootSpeed2 = balaVel.clone();
+				shootSpeed2.position.x = -13.5;
+				shootSpeed2.position.y = 1.5;
+				shootSpeed2.light = new THREE.PointLight(0xff0000, 3, 4, 3);
+				shootSpeed2.light.position.set(shootSpeed2.position.x, shootSpeed2.position.y, shootSpeed2.position.z);
+			
+				shootSpeed2.box = new THREE.Box3();
+				shootSpeed2.box.setFromObject(shootSpeed2);
+				shootSpeed2.effect = 2;
+				items.push(shootSpeed2);
+
+				scene.add(shootSpeed);
+				scene.add(shootSpeed2);
+				scene.add(shootSpeed.light);
+				scene.add(shootSpeed2.light);
+
+				isWorldReady[8] = true;
+			});
+
+			//BALAS
+
+			loadOBJWithMTL("assets/", "bala.obj", "bala.mtl", (bala) => {
+				bala.scale.set(0.1, 0.2, 0.1);
+				bala.rotation.x = THREE.Math.degToRad(90);
+				var bullet = bala.clone();
+				bullet.position.x = -40;
+				bullet.position.y = -40;
+			
+				bullet.name = "bullet";
+				scene.add(bullet);
+
+				isWorldReady[9] = true;
+			});
 
 			//PAREDES
 			loadOBJWithMTL("assets/", "Pared3.obj", "Pared3.mtl", (pared) => {
@@ -651,6 +693,10 @@
 				isWorldReady[4] = true;
 			});
 
+			//------------------------------------------------
+
+
+
 
 			clock = new THREE.Clock();
 			rayCaster = new THREE.Raycaster();
@@ -696,8 +742,15 @@
 
 			camera.position.z = 7;
 
+			//LUCES----------------------------------------------------
+			//Luz Ambiental----------
+			var LA = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 0.5);
+			scene.add(LA);
 
-
+			//Luz focal
+			var LF = new THREE.DirectionalLight(new THREE.Color(1, 1, 1), 0.5);
+			LF.position.set(0,1,0);
+			scene.add(LF);
 			//scene.add(player);
 
 			$("#scene-section").append(renderer.domElement);
@@ -714,8 +767,8 @@
 
 		function render() {
 
-			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4] && isWorldReady[5]) {
-
+			if (isWorldReady[0] && isWorldReady[1] && isWorldReady[2] && isWorldReady[3] && isWorldReady[4] && isWorldReady[5]&& isWorldReady[6]&& isWorldReady[7]&& isWorldReady[8]&& isWorldReady[9]) {
+				document.getElementById('background_cargando').style.display = 'none';
 
 
 				deltaTime = clock.getDelta();
@@ -805,6 +858,7 @@
 					}
 
 					if (keys["S"] && player.canShoot == true) {
+						soundDisparo();
 						var newBullet = sampleBullet.clone();
 						newBullet.rotation.y = player.rotation.y;
 						newBullet.position.set(player.position.x, player.position.y + 0.5, player.position.z);
@@ -877,6 +931,7 @@
 						}
 
 						if (keys["K"] && player2.canShoot == true) {
+							soundDisparo()
 							var newBullet = sampleBullet.clone();
 							newBullet.rotation.y = player2.rotation.y;
 							newBullet.position.set(player2.position.x, player2.position.y + 0.5, player2.position.z);
@@ -1099,7 +1154,7 @@
 						items[i].rotateX(-THREE.Math.degToRad(30) * deltaTime);
 						for (var j = 0; j < players.length; j++) {
 							if (items[i].box.intersectsBox(players[j].box)) {
-								sound();
+								soundItem();
 								switch (items[i].effect) {
 
 									case 0: {
@@ -1218,8 +1273,8 @@
 				document.getElementById('botonesL').style.display = 'block';
 				document.getElementById('tiempoFinal').innerHTML = 300 - Math.floor(tiempoTotal) + " seg";
 				RegistrarTiempo(1, 300 - Math.floor(tiempoTotal));
-				if(  nPlayers == 2){
-				RegistrarTiempo2(1, 300 - Math.floor(tiempoTotal));
+				if (nPlayers == 2) {
+					RegistrarTiempo2(1, 300 - Math.floor(tiempoTotal));
 				}
 			}
 			else {
@@ -1356,20 +1411,45 @@
 
 	<!--SONIDO-->
 
-	<audio id="Audio2" autoplay>
+	<audio id="Audio2" >
 
 		<source src="music/btn_sound.mp3" type="audio/mp3">
 		Your browser does not support the audio element.
 	</audio>
 
-	<audio id="Audio3" autoplay>
+	<audio id="Audio3" >
 
 		<source src="music/btn_click.mp3" type="audio/mp3">
 		Your browser does not support the audio element.
 	</audio>
+	<audio id="Audio4" >
+
+		<source src="music/golpe.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+	<audio id="Audio5" >
+
+		<source src="music/item.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+
+	<audio id="Audio6" >
+
+		<source src="music/disparo.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+
+	<!--MENU CARGANDO-->
+
+	<div class="background_cargando" , id="background_cargando">
+		<div class="logo">
+			<img id="hamster" src="img/cargando.png" width="900px" height="600px">
+			<img id="hamster2" src="img/cargando2.png" width="900px" height="600px">
+		</div>
+	
 
 
-
+	</div>
 
 
 	<!--MENU PAUSA-->

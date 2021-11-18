@@ -1,22 +1,22 @@
 <html>
 
 <head>
-	<!--NECESITAMOS DE UN SERVIDOR WEB : XAMPP ejecutar Apache
+    <!--NECESITAMOS DE UN SERVIDOR WEB : XAMPP ejecutar Apache
 	Buscar htdocs en donde descargaste el XAMPP
 Pegar en htdocs la carpeta del proyecto para ejecutarlo en el servidor web
 Escribir en el navegador: http://localhost/3_facebook/3_facebook/-->
-	<!-- Configuracion rapida de facebook api -->
-	<!-- REGISTRARSE EN: https://developers.facebook.com/docs/javascript/quickstart -->
-	<title>3.0 Facebook</title>
-	<link rel="stylesheet" type="text/css" href="css/Creditos.css">
-	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/Puntuacion.js"></script>
-	<script type="text/javascript">
-		function shareFB() {
-		
-			shareScore(puntuacion);
-		}
-	</script>
+    <!-- Configuracion rapida de facebook api -->
+    <!-- REGISTRARSE EN: https://developers.facebook.com/docs/javascript/quickstart -->
+    <title>Puntuación</title>
+    <link rel="stylesheet" type="text/css" href="css/Creditos.css">
+    <script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="js/Puntuacion.js"></script>
+    <script type="text/javascript">
+        function shareFB() {
+
+            shareScore(puntuacion);
+        }
+    </script>
 </head>
 
 <body>
@@ -25,17 +25,18 @@ Escribir en el navegador: http://localhost/3_facebook/3_facebook/-->
     <div class="background">
         <div class="logo">
             <img src="img/Logo.png" width="500px" height="200px">
-            <h1 id="h1">Mi tiempo es:<p id="txtScore"> </p></h1>
-           
+            <h1 id="h1">Mi tiempo es:<p id="txtScore"> </p>
+            </h1>
+
             <div class="botones">
                 <button class="" id="btn_Multijugador" onclick="shareFB()"> Compartir en Facebook</button>
-            
+
             </div>
             <div class="botones">
                 <button class="" id="btn_Multijugador" onclick="location.href='Principal.html'"> Volver</button>
-              
+
             </div>
-			<button class="" id="n1" onclick="GetTiempo(1)">Nivel 1</button>
+            <button class="" id="n1" onclick="GetTiempo(1)">Nivel 1</button>
             <button class="" id="n2" onclick="GetTiempo(2)">Nivel 2</button>
             <button class="" id="n3" onclick="GetTiempo(3)">Nivel 3</button>
         </div>
