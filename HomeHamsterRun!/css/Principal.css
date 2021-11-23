@@ -112,6 +112,15 @@ a{
     bottom: 50px;
     animation: arriba 1s ease-in forwards ;
 }
+#controls{
+ 
+position: absolute;
+    
+
+    right: 10px;
+    bottom: 180px;
+    animation: arriba 1s ease-in forwards ;
+}
 
 .records{
     position: absolute;

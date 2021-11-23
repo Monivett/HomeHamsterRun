@@ -101,7 +101,15 @@ h1, h2{
     color: white;
     text-align: center;
 }
+tr,h4{
+    font-family: cursive;
+    color: white;
+    text-align: justify;
+}
+table, th, td{
 
+    border: 1px solid #dbad22;;
+}
 
 #n1,#n2,#n3{
     background-color:  #dbad22;

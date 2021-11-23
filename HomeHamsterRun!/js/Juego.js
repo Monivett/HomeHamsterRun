@@ -14,7 +14,7 @@ $("#btn_Volver").click(function () {
     document.getElementById('background_pausa').style.display = 'none';
 });
 $(document).ready(function () {
-   // leerUsuario();
+   leerUsuario();
     document.getElementById('botonsilencio').style.display = 'none';
 });
 //VERIFICA SI ELIGIO MULTIJUGADOR 
@@ -64,7 +64,8 @@ function LeerUser2() {
         document.getElementById('username2').innerHTML = datos;
         UserID2 = localStorage.getItem("IDplayer2");
     } else {
-       // window.location.href = 'Registro multi.html'
+       window.location.href = 'Registro multi.html'
+       localStorage.setItem("ModoJuego", "Solitario");
     }
 }
 

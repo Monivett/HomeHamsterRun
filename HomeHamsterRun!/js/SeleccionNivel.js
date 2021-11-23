@@ -29,6 +29,7 @@ function LeerUser2() {
 document.getElementById('btncerrar2').style.display= 'block';
     } else {
         window.location.href = 'Registro multi.html'
+        localStorage.setItem("ModoJuego", "Solitario");
     }
 }
 

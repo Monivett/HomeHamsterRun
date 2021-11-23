@@ -1,18 +1,17 @@
-//LOGIN CON FACEBOOK
 window.fbAsyncInit = function () {
     // FB JavaScript SDK configuration and setup
     FB.init({
         appId: '3140496469559704', // FB App ID
         cookie: true,  // enable cookies to allow the server to access the session
         xfbml: true,  // parse social plugins on this page
-        version: 'v2.9' // use graph api version 2.8
+        version: 'v3.2' // use graph api version 2.8
     });
 
     // Check whether the user already logged in
     FB.getLoginStatus(function (response) {
         if (response.status === 'connected') {
             //display user data
-            getFbUserData();
+            //getFbUserData();
         }
     });
 };
@@ -31,9 +30,9 @@ function fbLogin() {
     FB.login(function (response) {
         if (response.authResponse) {
             // Get and display the user profile data
-         //   getFbUserData();
+            getFbUserData();
         } else {
-            //document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
+            document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
         }
     }, { scope: 'email' });
 }
@@ -46,14 +45,11 @@ function getFbUserData() {
         function (response) {
             var FoDatos = new FormData(); //Form artificial de HTML
 
-            FoDatos.append('nombre', response.first_name+' '+response.last_name);
+            FoDatos.append('nombre', response.first_name);
             FoDatos.append('correo', response.email);
-            FoDatos.append('genero', 1);
             FoDatos.append('contrasena', response.id);
-            FoDatos.append('fechanac', '00-00-0000');
-            FoDatos.append('rol', 0);
-       
-            FoDatos.append('opc', 'L');
+
+            FoDatos.append('opc', 1);
 
             
         fetch('php/User.php', { method: "POST", body: FoDatos }) //Función asincrona, manda los datos a User.php
@@ -63,12 +59,11 @@ function getFbUserData() {
         .then(data => {
             console.log(data); //Imprimimos el texto
             if (data == 1) {
-                console.log("Te has registrado correctamente");
-                window.location.href = "Principal.html";
+                 LOGIN(response.first_name, response.id);
 
 
-            } else if (data == "Duplicate entry '" + response.email + "' for key 'Email'") {
-                LOGIN(response.email, response.id);
+            } else if (data == "Duplicate entry '" + response.first_name + "' for key 'Username'") {
+                LOGIN(response.first_name, response.id);
             }
             else {
                 alert("Error: No se pudo iniciar sesión con Facebook");
@@ -90,11 +85,11 @@ function fbLogout() {
     });
 }
 
-function LOGIN(correo, contrasena){
+function LOGIN(username, contrasena){
     
     var FoDatos = new FormData(); //Form de HTML
 
-    FoDatos.append('correo', correo);
+    FoDatos.append('username', username);
     FoDatos.append('contrasena', contrasena);
 
     FoDatos.append('opc', 2);

@@ -338,8 +338,8 @@
 			});
 			//PLAYER
 			loadOBJWithMTL("assets/", "hamsterPoseBase.obj", "hamsterPoseBase.mtl", (player) => {
-				player.position.x = -11
-				player.position.y = 3;
+				player.position.x = -8
+				player.position.y = 5;
 				player.scale.set(0.4, 0.4, 0.4);
 				player.rotation.y = THREE.Math.degToRad(90);
 
@@ -369,8 +369,8 @@
 				//Cargar las poses cuando ya este cargado el player
 				loadOBJWithMTL("assets/", "hamsterpose2.obj", "hamsterpose2.mtl", (player1pose) => {
 
-					player1pose.position.x = -11
-					player1pose.position.y = 3;
+					player1pose.position.x = -8
+					player1pose.position.y = 5;
 					player1pose.scale.set(0.4, 0.4, 0.4);
 					player1pose.rotation.y = THREE.Math.degToRad(90);
 					player.poses.push(player1pose)
@@ -379,8 +379,8 @@
 					scene.add(player.poses[0]);
 					loadOBJWithMTL("assets/", "hamsterpose3.obj", "hamsterpose3.mtl", (player1pose2) => {
 
-						player1pose2.position.x = -11
-						player1pose2.position.y = 3;
+						player1pose2.position.x = -8
+						player1pose2.position.y = 5;
 						player1pose2.scale.set(0.4, 0.4, 0.4);
 						player1pose2.rotation.y = THREE.Math.degToRad(90);
 						player.poses.push(player1pose2)
@@ -889,7 +889,7 @@
 
 				var sampleBullet = scene.getObjectByName("bullet");
 
-				for (var j = 0; j < players.length; j++) {
+				for (var j = 0; j < players.length; j++) { //Ciclo para que las plataformas te empujen
 					for (var i = 0; i < CollisionsBox.length; i++) {
 						if (players[j].box.intersectsBox(CollisionsBox[i].box)) {
 							if (Math.abs(players[j].box.min.x - CollisionsBox[i].box.max.x) <= 0.5) {
@@ -933,10 +933,10 @@
 
 					} else if (keys["D"]) {
 						player.rotation.y = THREE.Math.degToRad(90);
-						for (var i = 0; i < CollisionsBox.length; i++) {
+						for (var i = 0; i < CollisionsBox.length; i++) { //Checamos que el personaje no este dentro de las plataformas
 							if ((player.box.min.y > CollisionsBox[i].box.min.y && player.box.min.y < CollisionsBox[i].box.max.y) || (player.box.max.y > CollisionsBox[i].box.min.y && player.box.max.y < CollisionsBox[i].box.max.y)) {
-								if (Math.abs(player.box.max.x - CollisionsBox[i].box.min.x) <= 0.2) {
-									forward = 0;
+								if (Math.abs(player.box.max.x - CollisionsBox[i].box.min.x) <= 0.2) { //Si colisiona
+									forward = 0; //Ya no puedes avanzar
 									break;
 								}
 								else {
